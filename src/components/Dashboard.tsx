@@ -50,12 +50,26 @@ export default function Dashboard() {
     updateCompany 
   } = useStore();
   
-  const currentCompany = companies.find(c => c.id === currentCompanyId);
+  const currentCompany = useMemo(() => {
+    return companies.find(c => c.id === currentCompanyId) || companies[0] || {
+      id: 'fallback',
+      name: 'Empresa',
+      primaryColor: '#3b82f6',
+      businessType: 'Serviços'
+    };
+  }, [companies, currentCompanyId]);
+
   const [activeTab, setActiveTab] = useState('dashboard');
+
+
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('A imagem deve ter no máximo 2MB');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         updateCompany(currentCompanyId!, { logo: reader.result as string });
@@ -63,6 +77,7 @@ export default function Dashboard() {
       reader.readAsDataURL(file);
     }
   };
+
 
   
   if (!user) return <Login />;
@@ -324,7 +339,13 @@ export default function Dashboard() {
   );
 }
 
-function NavItem({ icon, label, active, onClick }: any) {
+function NavItem({ icon, label, active, onClick }: {
+  icon: React.ReactNode;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+
   return (
     <button 
       onClick={onClick} 
@@ -341,7 +362,15 @@ function NavItem({ icon, label, active, onClick }: any) {
   );
 }
 
-function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }: any) {
+function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }: {
+  title: string;
+  value: string;
+  icon: React.ReactNode;
+  trend?: string;
+  trendType?: 'positive' | 'negative';
+  isHighlight?: boolean;
+}) {
+
   return (
     <Card className={cn(
       "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-md", 

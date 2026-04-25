@@ -104,14 +104,19 @@ export const useStore = create<AppState>()(
       logout: () => set({ user: null }),
       setTheme: (theme) => {
         set({ theme });
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
+        if (typeof document !== 'undefined') {
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
         }
       },
       addCompany: (company: Company) =>
-        set((state) => ({ companies: [...state.companies, company] })),
+        set((state) => ({ 
+          companies: [...state.companies, company],
+          currentCompanyId: company.id // Auto switch to new company
+        })),
       updateCompany: (id: string, updated: Partial<Company>) =>
         set((state) => ({
           companies: state.companies.map((c) => (c.id === id ? { ...c, ...updated } : c)),
@@ -150,6 +155,15 @@ export const useStore = create<AppState>()(
     }),
     {
       name: 'finance-saas-storage',
+      onRehydrateStorage: () => (state) => {
+        if (state?.theme) {
+          if (state.theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        }
+      }
     }
   )
 );
