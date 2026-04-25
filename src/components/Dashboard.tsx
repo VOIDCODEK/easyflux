@@ -21,7 +21,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Tag,
-  RefreshCw
+  RefreshCw,
+  ArrowLeftRight
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
@@ -43,9 +44,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Login from './Login';
 import ProductsView from './ProductsView';
-import TransactionsView from './TransactionsView';
 import CategoriesView from './CategoriesView';
-import RecurringTransactionsView from './RecurringTransactionsView';
+import MovementsView from './MovementsView';
 
 export default function Dashboard() {
   const { 
@@ -60,7 +60,7 @@ export default function Dashboard() {
     processRecurringTransactions 
   } = useStore();
   
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('movements');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -224,12 +224,10 @@ export default function Dashboard() {
             </div>
             
             <nav className="flex-1 px-4 py-4 space-y-1 min-w-[256px]">
+              <NavItem icon={<ArrowLeftRight size={20} />} label="Movimentações" active={activeTab === 'movements'} onClick={() => { setActiveTab('movements'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => { setActiveTab('products'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Tag size={20} />} label="Categorias" active={activeTab === 'categories'} onClick={() => { setActiveTab('categories'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
-              <NavItem icon={<RefreshCw size={20} />} label="Recorrência" active={activeTab === 'recurring'} onClick={() => { setActiveTab('recurring'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
-              <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => { setActiveTab('income'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
-              <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => { setActiveTab('expenses'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
             </nav>
 
@@ -271,12 +269,10 @@ export default function Dashboard() {
               <Menu size={20} />
             </button>
             <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white capitalize truncate">
-              {activeTab === 'dashboard' ? 'Painel de Controle' : 
-               activeTab === 'income' ? 'Gestão de Entradas' :
-               activeTab === 'expenses' ? 'Gestão de Saídas' :
+              {activeTab === 'movements' ? 'Movimentações Financeiras' :
+               activeTab === 'dashboard' ? 'Painel de Controle' : 
                activeTab === 'products' ? 'Catálogo de Produtos' : 
-               activeTab === 'categories' ? 'Gestão de Categorias' : 
-               activeTab === 'recurring' ? 'Custos Fixos e Recorrência' : 'Configurações do Sistema'}
+               activeTab === 'categories' ? 'Gestão de Categorias' : 'Configurações do Sistema'}
             </h2>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
@@ -294,10 +290,10 @@ export default function Dashboard() {
                 <Plus size={18} className="mr-1" /> Novo Registro
               </Button>
               <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
-                <button onClick={() => setActiveTab('income')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white">
+                <button onClick={() => setActiveTab('movements')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white">
                   <TrendingUp size={16} className="text-emerald-500" /> Nova Entrada
                 </button>
-                <button onClick={() => setActiveTab('expenses')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
+                <button onClick={() => setActiveTab('movements')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
                   <TrendingDown size={16} className="text-rose-500" /> Nova Saída
                 </button>
                 <button onClick={() => setActiveTab('products')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
@@ -388,11 +384,9 @@ export default function Dashboard() {
             </>
           )}
 
+          {activeTab === 'movements' && <MovementsView />}
           {activeTab === 'products' && <ProductsView />}
           {activeTab === 'categories' && <CategoriesView />}
-          {activeTab === 'recurring' && <RecurringTransactionsView />}
-          {activeTab === 'income' && <TransactionsView type="income" />}
-          {activeTab === 'expenses' && <TransactionsView type="expense" />}
 
           {activeTab === 'settings' && (
             <div className="max-w-2xl mx-auto space-y-6">
