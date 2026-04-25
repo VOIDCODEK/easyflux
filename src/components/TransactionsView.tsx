@@ -7,14 +7,24 @@ import { formatCurrency, cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
 export default function TransactionsView({ type }: { type: 'income' | 'expense' }) {
-  const { transactions, addTransaction, deleteTransaction, currentCompanyId } = useStore();
+  const { transactions, addTransaction, deleteTransaction, currentCompanyId, selectedMonth, selectedYear } = useStore();
   const [desc, setDesc] = useState('');
   const [val, setVal] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  
+  // Default date to the first of the selected month/year
+  const defaultDate = new Date(selectedYear, selectedMonth, 1).toISOString().split('T')[0];
+  const [date, setDate] = useState(defaultDate);
+  
   const categories = useStore(state => state.categories);
   const [category, setCategory] = useState(categories[0] || 'Geral');
 
-  const filtered = transactions.filter(t => t.type === type && t.companyId === currentCompanyId);
+  const filtered = transactions.filter(t => {
+    const d = new Date(t.date);
+    return t.type === type && 
+           t.companyId === currentCompanyId && 
+           d.getMonth() === selectedMonth && 
+           d.getFullYear() === selectedYear;
+  });
 
   return (
     <div className="space-y-6">
