@@ -3,7 +3,7 @@ import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, Plus, TrendingUp, TrendingDown } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
 export default function TransactionsView({ type }: { type: 'income' | 'expense' }) {
@@ -67,5 +67,3 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
     </div>
   );
 }
-
-import { cn } from '@/lib/utils';
