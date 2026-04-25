@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import TransactionsView from './TransactionsView';
 import RecurringTransactionsView from './RecurringTransactionsView';
+import { PeriodSelector } from './PeriodSelector';
 
 export default function MovementsView() {
   const { companies, currentCompanyId } = useStore();
