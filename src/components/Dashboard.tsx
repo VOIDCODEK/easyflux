@@ -14,8 +14,10 @@ import {
   Moon,
   Sun,
   Camera,
-  Paintbrush
+  Paintbrush,
+  Trash2
 } from 'lucide-react';
+
 import { useStore } from '@/lib/store';
 import { formatCurrency, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
