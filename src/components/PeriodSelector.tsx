@@ -1,7 +1,5 @@
 import { useStore } from '@/lib/store';
-import { Button } from '@/components/ui/button';
-import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Calendar } from 'lucide-react';
 
 export function PeriodSelector() {
   const { selectedMonth, selectedYear, setSelectedPeriod } = useStore();
@@ -11,48 +9,40 @@ export function PeriodSelector() {
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
-  const handlePrevious = () => {
-    if (selectedMonth === 0) {
-      setSelectedPeriod(11, selectedYear - 1);
-    } else {
-      setSelectedPeriod(selectedMonth - 1, selectedYear);
-    }
-  };
-
-  const handleNext = () => {
-    if (selectedMonth === 11) {
-      setSelectedPeriod(0, selectedYear + 1);
-    } else {
-      setSelectedPeriod(selectedMonth + 1, selectedYear);
-    }
-  };
+  // Generate a range of years around the selected year
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 15 }, (_, i) => Math.min(selectedYear, currentYear - 5) + i);
 
   return (
-    <div className="flex items-center bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl p-1 shadow-sm">
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-8 w-8 text-slate-500" 
-        onClick={handlePrevious}
-      >
-        <ChevronLeft size={16} />
-      </Button>
-      
-      <div className="px-3 flex items-center gap-2 min-w-[140px] justify-center">
-        <Calendar size={14} className="text-blue-500" />
-        <span className="text-sm font-bold dark:text-white">
-          {months[selectedMonth]} {selectedYear}
-        </span>
+    <div className="flex items-center gap-2">
+      <div className="flex items-center bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl p-1 shadow-sm px-3">
+        <Calendar size={14} className="text-blue-500 mr-2" />
+        <select 
+          className="bg-transparent border-none text-sm font-bold dark:text-white focus:outline-none cursor-pointer pr-2"
+          value={selectedMonth}
+          onChange={(e) => setSelectedPeriod(Number(e.target.value), selectedYear)}
+        >
+          {months.map((month, index) => (
+            <option key={month} value={index} className="dark:bg-slate-900">
+              {month}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-8 w-8 text-slate-500" 
-        onClick={handleNext}
-      >
-        <ChevronRight size={16} />
-      </Button>
+      <div className="flex items-center bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl p-1 shadow-sm px-3">
+        <select 
+          className="bg-transparent border-none text-sm font-bold dark:text-white focus:outline-none cursor-pointer pr-2"
+          value={selectedYear}
+          onChange={(e) => setSelectedPeriod(selectedMonth, Number(e.target.value))}
+        >
+          {years.map((year) => (
+            <option key={year} value={year} className="dark:bg-slate-900">
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
