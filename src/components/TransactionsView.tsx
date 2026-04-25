@@ -11,8 +11,8 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
   const [desc, setDesc] = useState('');
   const [val, setVal] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [category, setCategory] = useState('Geral');
   const categories = useStore(state => state.categories);
+  const [category, setCategory] = useState(categories[0] || 'Geral');
 
   const filtered = transactions.filter(t => t.type === type && t.companyId === currentCompanyId);
 
@@ -25,7 +25,10 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
             Novo {type === 'income' ? 'Recebimento' : 'Pagamento'}
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <CardContent className={cn(
+          "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4",
+          categories.length === 0 && "lg:grid-cols-4"
+        )}>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Descrição</label>
             <Input placeholder="Ex: Venda de Produto" value={desc} onChange={e => setDesc(e.target.value)} />
@@ -38,18 +41,20 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
             <label className="text-xs font-medium text-slate-500">Data</label>
             <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-slate-500">Categoria</label>
-            <select 
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-900 dark:border-slate-800 dark:text-white"
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-            >
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
+          {categories.length > 0 && (
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-500">Categoria</label>
+              <select 
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-900 dark:border-slate-800 dark:text-white"
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="flex items-end">
             <Button 
               onClick={() => { 
@@ -59,7 +64,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
                   type, 
                   value: Number(val), 
                   description: desc, 
-                  category, 
+                  category: categories.length > 0 ? category : 'Sem Categoria', 
                   date: new Date(date).toISOString() 
                 }); 
                 setDesc(''); setVal(''); 
