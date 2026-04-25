@@ -214,7 +214,11 @@ export default function Dashboard() {
             <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
             
             <div className="relative group">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 dark:shadow-none hidden sm:flex">
+              <Button 
+                size="sm" 
+                className="hover:opacity-90 shadow-md transition-all hidden sm:flex border-none text-white"
+                style={{ backgroundColor: currentCompany?.primaryColor || '#3b82f6' }}
+              >
                 <Plus size={18} className="mr-1" /> Novo Registro
               </Button>
               <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
