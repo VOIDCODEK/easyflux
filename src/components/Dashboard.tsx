@@ -273,8 +273,8 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-
                   <div className="space-y-2">
+
                     <Label>Nome da Empresa</Label>
                     <Input 
                       value={currentCompany?.name || ''} 
