@@ -115,7 +115,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
                 <p className={cn("font-bold", type === 'income' ? "text-emerald-600" : "text-rose-600")}>
                   {type === 'income' ? '+' : '-'} {formatCurrency(t.value)}
                 </p>
-                <Button variant="ghost" size="icon" onClick={() => deleteTransaction(t.id)} className="text-slate-400 hover:text-rose-500">
+                <Button variant="ghost" size="icon" onClick={() => !isClosed && deleteTransaction(t.id)} className={cn("text-slate-400 hover:text-rose-500", isClosed && "opacity-50 cursor-not-allowed")}>
                   <Trash2 size={16} />
                 </Button>
               </div>
