@@ -43,6 +43,7 @@ import { Label } from '@/components/ui/label';
 import Login from './Login';
 import ProductsView from './ProductsView';
 import TransactionsView from './TransactionsView';
+import CategoriesView from './CategoriesView';
 
 export default function Dashboard() {
   const { 
