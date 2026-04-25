@@ -160,61 +160,110 @@ export default function Dashboard() {
 
   return (
     <div className={cn("flex min-h-screen transition-all duration-300", theme === 'dark' ? "dark bg-slate-950 text-slate-200" : "bg-slate-50 text-slate-900")}>
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-900 border-r dark:border-slate-800 hidden md:flex flex-col h-screen sticky top-0">
-        <div className="p-6 flex items-center gap-3">
-          {currentCompany?.logo ? (
-            <img src={currentCompany.logo} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
-          ) : (
-            <div 
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg"
-              style={{ backgroundColor: currentCompany?.primaryColor || '#3b82f6' }}
-            >
-              {currentCompany?.name?.charAt(0) || 'F'}
+      <AnimatePresence>
+        {(isSidebarOpen || isMobileMenuOpen) && (
+          <motion.aside
+            initial={isMobileMenuOpen ? { x: -300 } : { width: 0, opacity: 0 }}
+            animate={isMobileMenuOpen ? { x: 0 } : { width: 256, opacity: 1 }}
+            exit={isMobileMenuOpen ? { x: -300 } : { width: 0, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className={cn(
+              "bg-white dark:bg-slate-900 border-r dark:border-slate-800 flex flex-col h-screen sticky top-0 z-50 overflow-hidden",
+              isMobileMenuOpen ? "fixed left-0 w-64 shadow-2xl" : "hidden md:flex"
+            )}
+          >
+            <div className="p-6 flex items-center justify-between gap-3 min-w-[256px]">
+              <div className="flex items-center gap-3">
+                {currentCompany?.logo ? (
+                  <img src={currentCompany.logo} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
+                ) : (
+                  <div 
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg"
+                    style={{ backgroundColor: currentCompany?.primaryColor || '#3b82f6' }}
+                  >
+                    {currentCompany?.name?.charAt(0) || 'F'}
+                  </div>
+                )}
+                <div className="overflow-hidden">
+                  <h1 className="font-bold leading-tight truncate rounded-none text-slate-100">Easy Flux</h1>
+                  <p className="text-xs text-slate-500 truncate">{currentCompany?.name}</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => isMobileMenuOpen ? setIsMobileMenuOpen(false) : setIsSidebarOpen(false)}
+                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 md:block"
+              >
+                <X size={20} />
+              </button>
             </div>
-          )}
-          <div className="overflow-hidden">
-            <h1 className="font-bold leading-tight truncate rounded-none text-slate-100">Easy Flux</h1>
-            <p className="text-xs text-slate-500 truncate">{currentCompany?.name}</p>
-          </div>
-        </div>
-        
-        <nav className="flex-1 px-4 py-4 space-y-1">
-          <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} primaryColor={currentCompany?.primaryColor} />
-          <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => setActiveTab('products')} primaryColor={currentCompany?.primaryColor} />
-          <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => setActiveTab('income')} primaryColor={currentCompany?.primaryColor} />
-          <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => setActiveTab('expenses')} primaryColor={currentCompany?.primaryColor} />
-          <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} primaryColor={currentCompany?.primaryColor} />
-        </nav>
+            
+            <nav className="flex-1 px-4 py-4 space-y-1 min-w-[256px]">
+              <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
+              <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => { setActiveTab('products'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
+              <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => { setActiveTab('income'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
+              <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => { setActiveTab('expenses'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
+              <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
+            </nav>
 
-        <div className="p-4 border-t dark:border-slate-800">
-          <div className="flex items-center gap-3 px-4 py-3 mb-2">
-            <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold text-xs uppercase">
-              {user?.name?.charAt(0) || '?'}
+            <div className="p-4 border-t dark:border-slate-800 min-w-[256px]">
+              <div className="flex items-center gap-3 px-4 py-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold text-xs uppercase">
+                  {user?.name?.charAt(0) || '?'}
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-sm font-semibold dark:text-white truncate">{user?.name}</p>
+                  <p className="text-[10px] text-slate-500 truncate">{user?.email}</p>
+                </div>
+              </div>
+              <button onClick={logout} className="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-rose-600 transition-colors w-full rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/10">
+                <LogOut size={20} />
+                <span className="font-medium">Sair</span>
+              </button>
             </div>
-            <div className="overflow-hidden">
-              <p className="text-sm font-semibold dark:text-white truncate">{user?.name}</p>
-              <p className="text-[10px] text-slate-500 truncate">{user?.email}</p>
-
-            </div>
-          </div>
-          <button onClick={logout} className="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-rose-600 transition-colors w-full rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/10">
-            <LogOut size={20} />
-            <span className="font-medium">Sair</span>
-          </button>
-        </div>
-      </aside>
+          </motion.aside>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 bg-white dark:bg-slate-900 border-b dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white capitalize">
-            {activeTab === 'dashboard' ? 'Painel de Controle' : 
-             activeTab === 'income' ? 'Gestão de Entradas' :
-             activeTab === 'expenses' ? 'Gestão de Saídas' :
-             activeTab === 'products' ? 'Catálogo de Produtos' : 'Configurações do Sistema'}
-          </h2>
+        <header className="h-16 bg-white dark:bg-slate-900 border-b dark:border-slate-800 flex items-center justify-between px-4 md:px-8 sticky top-0 z-30">
           <div className="flex items-center gap-4">
+            {!isSidebarOpen && (
+              <button 
+                onClick={() => setIsSidebarOpen(true)}
+                className="hidden md:flex p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-400"
+              >
+                <ChevronRight size={20} />
+              </button>
+            )}
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-400"
+            >
+              <Menu size={20} />
+            </button>
+            <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white capitalize truncate">
+              {activeTab === 'dashboard' ? 'Painel de Controle' : 
+               activeTab === 'income' ? 'Gestão de Entradas' :
+               activeTab === 'expenses' ? 'Gestão de Saídas' :
+               activeTab === 'products' ? 'Catálogo de Produtos' : 'Configurações do Sistema'}
+            </h2>
+          </div>
+          <div className="flex items-center gap-2 md:gap-4">
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
               {theme === 'light' ? <Moon size={20} className="text-slate-600" /> : <Sun size={20} className="text-yellow-400" />}
             </Button>
