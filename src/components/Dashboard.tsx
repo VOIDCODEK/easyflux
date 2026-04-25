@@ -61,7 +61,31 @@ export default function Dashboard() {
 
   const [activeTab, setActiveTab] = useState('dashboard');
 
+  const companyTransactions = useMemo(() => {
+    return transactions.filter(t => t.companyId === currentCompanyId);
+  }, [transactions, currentCompanyId]);
+  
+  const totalIncome = useMemo(() => {
+    return companyTransactions
+      .filter(t => t.type === 'income')
+      .reduce((acc, t) => acc + t.value, 0);
+  }, [companyTransactions]);
+    
+  const totalExpenses = useMemo(() => {
+    return companyTransactions
+      .filter(t => t.type === 'expense')
+      .reduce((acc, t) => acc + t.value, 0);
+  }, [companyTransactions]);
+    
+  const netProfit = totalIncome - totalExpenses;
 
+  const chartData = useMemo(() => [
+    { name: 'Jan', income: 4000, expense: 2400 },
+    { name: 'Fev', income: 3000, expense: 1398 },
+    { name: 'Mar', income: 2000, expense: 3800 },
+    { name: 'Abr', income: 2780, expense: 3908 },
+    { name: 'Mai', income: totalIncome || 1890, expense: totalExpenses || 4800 },
+  ], [totalIncome, totalExpenses]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -78,29 +102,10 @@ export default function Dashboard() {
     }
   };
 
-
-  
-  if (!user) return <Login />;
-  
-  const companyTransactions = transactions.filter(t => t.companyId === currentCompanyId);
-  
-  const totalIncome = companyTransactions
-    .filter(t => t.type === 'income')
-    .reduce((acc, t) => acc + t.value, 0);
-    
-  const totalExpenses = companyTransactions
-    .filter(t => t.type === 'expense')
-    .reduce((acc, t) => acc + t.value, 0);
-    
-  const netProfit = totalIncome - totalExpenses;
-
-  const chartData = useMemo(() => [
-    { name: 'Jan', income: 4000, expense: 2400 },
-    { name: 'Fev', income: 3000, expense: 1398 },
-    { name: 'Mar', income: 2000, expense: 3800 },
-    { name: 'Abr', income: 2780, expense: 3908 },
-    { name: 'Mai', income: totalIncome || 1890, expense: totalExpenses || 4800 },
-  ], [totalIncome, totalExpenses]);
+  // Only return Login if user is not authenticated, but AFTER all hooks
+  if (!user) {
+    return <Login />;
+  }
 
   return (
     <div className={cn("flex min-h-screen", theme === 'dark' ? "dark bg-slate-950" : "bg-slate-50")}>
@@ -289,7 +294,6 @@ export default function Dashboard() {
                   </div>
 
                   <div className="space-y-2">
-
                     <Label>Nome da Empresa</Label>
                     <Input 
                       value={currentCompany?.name || ''} 
@@ -345,7 +349,6 @@ function NavItem({ icon, label, active, onClick }: {
   active: boolean;
   onClick: () => void;
 }) {
-
   return (
     <button 
       onClick={onClick} 
@@ -370,7 +373,6 @@ function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }
   trendType?: 'positive' | 'negative';
   isHighlight?: boolean;
 }) {
-
   return (
     <Card className={cn(
       "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-md", 
