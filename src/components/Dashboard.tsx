@@ -149,7 +149,7 @@ export default function Dashboard() {
     }
     
     return last6Months;
-  }, [companyTransactions]);
+  }, [companyTransactions, selectedMonth, selectedYear]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
