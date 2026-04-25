@@ -11,8 +11,8 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
   const [desc, setDesc] = useState('');
   const [val, setVal] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [category, setCategory] = useState('Geral');
   const categories = useStore(state => state.categories);
+  const [category, setCategory] = useState(categories[0] || 'Geral');
 
   const filtered = transactions.filter(t => t.type === type && t.companyId === currentCompanyId);
 
