@@ -10,6 +10,9 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
   const { transactions, addTransaction, deleteTransaction, currentCompanyId } = useStore();
   const [desc, setDesc] = useState('');
   const [val, setVal] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [category, setCategory] = useState('Geral');
+  const categories = useStore(state => state.categories);
 
   const filtered = transactions.filter(t => t.type === type && t.companyId === currentCompanyId);
 
@@ -22,22 +25,50 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
             Novo {type === 'income' ? 'Recebimento' : 'Pagamento'}
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex gap-4">
-          <Input placeholder="Descrição" value={desc} onChange={e => setDesc(e.target.value)} />
-          <Input type="number" placeholder="Valor" value={val} onChange={e => setVal(e.target.value)} />
-          <Button onClick={() => { 
-            addTransaction({ 
-              companyId: currentCompanyId!, 
-              type, 
-              value: Number(val), 
-              description: desc, 
-              category: 'Geral', 
-              date: new Date().toISOString() 
-            }); 
-            setDesc(''); setVal(''); 
-          }} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'}>
-            <Plus size={18} className="mr-2" /> Registrar
-          </Button>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-slate-500">Descrição</label>
+            <Input placeholder="Ex: Venda de Produto" value={desc} onChange={e => setDesc(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-slate-500">Valor (R$)</label>
+            <Input type="number" placeholder="0,00" value={val} onChange={e => setVal(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-slate-500">Data</label>
+            <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-slate-500">Categoria</label>
+            <select 
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-900 dark:border-slate-800 dark:text-white"
+              value={category}
+              onChange={e => setCategory(e.target.value)}
+            >
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-end">
+            <Button 
+              onClick={() => { 
+                if (!desc || !val) return;
+                addTransaction({ 
+                  companyId: currentCompanyId!, 
+                  type, 
+                  value: Number(val), 
+                  description: desc, 
+                  category, 
+                  date: new Date(date).toISOString() 
+                }); 
+                setDesc(''); setVal(''); 
+              }} 
+              className={cn("w-full", type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700')}
+            >
+              <Plus size={18} className="mr-2" /> Registrar
+            </Button>
+          </div>
         </CardContent>
       </Card>
       
@@ -47,7 +78,13 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
             <div key={t.id} className="flex justify-between items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
               <div>
                 <p className="font-semibold dark:text-white">{t.description}</p>
-                <p className="text-xs text-slate-500">{new Date(t.date).toLocaleDateString()}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium uppercase">
+                    {t.category}
+                  </span>
+                  <span className="text-xs text-slate-400">•</span>
+                  <p className="text-xs text-slate-500">{new Date(t.date).toLocaleDateString('pt-BR')}</p>
+                </div>
               </div>
               <div className="flex items-center gap-4">
                 <p className={cn("font-bold", type === 'income' ? "text-emerald-600" : "text-rose-600")}>

@@ -152,7 +152,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className={cn("flex min-h-screen", theme === 'dark' ? "dark bg-slate-950" : "bg-slate-50")}>
+    <div className={cn("flex min-h-screen transition-all duration-300", theme === 'dark' ? "dark bg-slate-950 text-slate-200" : "bg-slate-50 text-slate-900")}>
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-slate-900 border-r dark:border-slate-800 hidden md:flex flex-col h-screen sticky top-0">
         <div className="p-6 flex items-center gap-3">
@@ -205,13 +205,27 @@ export default function Dashboard() {
              activeTab === 'products' ? 'Catálogo de Produtos' : 'Configurações do Sistema'}
           </h2>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
               {theme === 'light' ? <Moon size={20} className="text-slate-600" /> : <Sun size={20} className="text-yellow-400" />}
             </Button>
             <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 dark:shadow-none hidden sm:flex">
-              <Plus size={18} className="mr-1" /> Novo Registro
-            </Button>
+            
+            <div className="relative group">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 dark:shadow-none hidden sm:flex">
+                <Plus size={18} className="mr-1" /> Novo Registro
+              </Button>
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+                <button onClick={() => setActiveTab('income')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white">
+                  <TrendingUp size={16} className="text-emerald-500" /> Nova Entrada
+                </button>
+                <button onClick={() => setActiveTab('expenses')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
+                  <TrendingDown size={16} className="text-rose-500" /> Nova Saída
+                </button>
+                <button onClick={() => setActiveTab('products')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
+                  <Package size={16} className="text-blue-500" /> Novo Produto
+                </button>
+              </div>
+            </div>
           </div>
         </header>
 
@@ -348,12 +362,19 @@ export default function Dashboard() {
 
                   <div className="space-y-2">
                     <Label>Meta de Receita Mensal (R$)</Label>
-                    <Input 
-                      type="number"
-                      value={currentCompany?.monthlyRevenueGoal || ''} 
-                      onChange={e => updateCompany(currentCompanyId!, { monthlyRevenueGoal: Number(e.target.value) })}
-                      placeholder="Ex: 10000"
-                    />
+                    <div className="flex gap-4">
+                      <Input 
+                        type="number"
+                        value={currentCompany?.monthlyRevenueGoal || ''} 
+                        onChange={e => updateCompany(currentCompanyId!, { monthlyRevenueGoal: Number(e.target.value) })}
+                        placeholder="Ex: 10000"
+                        className="flex-1"
+                      />
+                      <Button variant="outline" onClick={() => updateCompany(currentCompanyId!, { monthlyRevenueGoal: 0 })}>
+                        Zerar Meta
+                      </Button>
+                    </div>
+                    <p className="text-xs text-slate-500">Esta meta será exibida no gráfico de progresso do painel principal.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -430,7 +451,7 @@ function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }
 }) {
   return (
     <Card className={cn(
-      "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-md", 
+      "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-lg hover:-translate-y-1", 
       isHighlight && "border-blue-200 bg-blue-50/30 dark:bg-blue-900/10 dark:border-blue-900/50"
     )}>
       <CardContent className="p-6">
