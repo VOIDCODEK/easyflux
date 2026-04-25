@@ -257,7 +257,7 @@ export default function Dashboard() {
                 <StatsCard 
                   title="Lucro Líquido" 
                   value={formatCurrency(netProfit)} 
-                  icon={<DollarSign className="text-blue-500" />} 
+                  icon={<DollarSign style={{ color: currentCompany?.primaryColor }} />} 
                   trend="+8.2%"
                   trendType="positive"
                   isHighlight 
