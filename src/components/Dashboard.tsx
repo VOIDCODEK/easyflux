@@ -278,6 +278,7 @@ export default function Dashboard() {
             <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white capitalize truncate">
               {activeTab === 'movements' ? 'Movimentações Financeiras' :
                activeTab === 'dashboard' ? 'Painel de Controle' : 
+               activeTab === 'reports' ? 'Relatórios Financeiros' :
                activeTab === 'products' ? 'Catálogo de Produtos' : 
                activeTab === 'categories' ? 'Gestão de Categorias' : 'Configurações do Sistema'}
             </h2>
