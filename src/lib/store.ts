@@ -54,6 +54,8 @@ interface AppState {
   updateProduct: (id: string, updated: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
   setTheme: (theme: 'light' | 'dark') => void;
+  addCategory: (category: string) => void;
+  deleteCategory: (category: string) => void;
 }
 
 export const useStore = create<AppState>()(
