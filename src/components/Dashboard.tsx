@@ -505,19 +505,26 @@ function NavItem({ icon, label, active, onClick, primaryColor }: {
   );
 }
 
-function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }: {
+function StatsCard({ title, value, icon, trend, trendType, isHighlight = false, primaryColor }: {
   title: string;
   value: string;
   icon: React.ReactNode;
   trend?: string;
   trendType?: 'positive' | 'negative';
   isHighlight?: boolean;
+  primaryColor?: string;
 }) {
   return (
-    <Card className={cn(
-      "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-lg hover:-translate-y-1", 
-      isHighlight && "border-blue-200 bg-blue-50/30 dark:bg-blue-900/10 dark:border-blue-900/50"
-    )}>
+    <Card 
+      className={cn(
+        "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-lg hover:-translate-y-1", 
+        isHighlight && "border-opacity-50"
+      )}
+      style={isHighlight ? { 
+        borderColor: primaryColor,
+        backgroundColor: `${primaryColor}05` // very light background
+      } : {}}
+    >
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border dark:border-slate-700 shadow-sm flex items-center justify-center">
