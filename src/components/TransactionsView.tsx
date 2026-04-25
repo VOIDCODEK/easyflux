@@ -7,7 +7,10 @@ import { formatCurrency, cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
 export default function TransactionsView({ type }: { type: 'income' | 'expense' }) {
-  const { transactions, addTransaction, deleteTransaction, currentCompanyId, selectedMonth, selectedYear } = useStore();
+  const { transactions, addTransaction, deleteTransaction, currentCompanyId, selectedMonth, selectedYear, companies } = useStore();
+  const currentCompany = companies.find(c => c.id === currentCompanyId);
+  const isClosed = currentCompany?.closedMonths?.includes(`${selectedMonth}-${selectedYear}`);
+  
   const [desc, setDesc] = useState('');
   const [val, setVal] = useState('');
   
