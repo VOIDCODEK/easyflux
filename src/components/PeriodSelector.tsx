@@ -9,8 +9,9 @@ export function PeriodSelector() {
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
-  // Generate a range of years (e.g., from 2020 to 2030)
-  const years = Array.from({ length: 11 }, (_, i) => 2020 + i);
+  // Generate a range of years around the selected year
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 15 }, (_, i) => Math.min(selectedYear, currentYear - 5) + i);
 
   return (
     <div className="flex items-center gap-2">
