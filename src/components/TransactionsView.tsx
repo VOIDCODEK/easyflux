@@ -64,7 +64,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
                   type, 
                   value: Number(val), 
                   description: desc, 
-                  category, 
+                  category: categories.length > 0 ? category : 'Sem Categoria', 
                   date: new Date(date).toISOString() 
                 }); 
                 setDesc(''); setVal(''); 
