@@ -41,18 +41,20 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
             <label className="text-xs font-medium text-slate-500">Data</label>
             <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-slate-500">Categoria</label>
-            <select 
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-900 dark:border-slate-800 dark:text-white"
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-            >
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
+          {categories.length > 0 && (
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-500">Categoria</label>
+              <select 
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-900 dark:border-slate-800 dark:text-white"
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="flex items-end">
             <Button 
               onClick={() => { 
