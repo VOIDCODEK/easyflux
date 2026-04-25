@@ -56,12 +56,20 @@ export default function Dashboard() {
     logout, 
     theme, 
     setTheme,
-    updateCompany 
+    updateCompany,
+    processRecurringTransactions 
   } = useStore();
   
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Automatically process recurring transactions on load
+  useEffect(() => {
+    if (user) {
+      processRecurringTransactions();
+    }
+  }, [user, processRecurringTransactions]);
   
   const currentCompany = useMemo(() => {
     return companies.find(c => c.id === currentCompanyId) || companies[0] || {
