@@ -25,7 +25,10 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
             Novo {type === 'income' ? 'Recebimento' : 'Pagamento'}
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <CardContent className={cn(
+          "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4",
+          categories.length === 0 && "lg:grid-cols-4"
+        )}>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Descrição</label>
             <Input placeholder="Ex: Venda de Produto" value={desc} onChange={e => setDesc(e.target.value)} />
