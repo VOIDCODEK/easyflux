@@ -226,12 +226,10 @@ export default function Dashboard() {
             </div>
             
             <nav className="flex-1 px-4 py-4 space-y-1 min-w-[256px]">
+              <NavItem icon={<ArrowLeftRight size={20} />} label="Movimentações" active={activeTab === 'movements'} onClick={() => { setActiveTab('movements'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => { setActiveTab('products'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Tag size={20} />} label="Categorias" active={activeTab === 'categories'} onClick={() => { setActiveTab('categories'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
-              <NavItem icon={<RefreshCw size={20} />} label="Recorrência" active={activeTab === 'recurring'} onClick={() => { setActiveTab('recurring'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
-              <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => { setActiveTab('income'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
-              <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => { setActiveTab('expenses'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
             </nav>
 
