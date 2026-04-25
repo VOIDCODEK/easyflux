@@ -376,6 +376,52 @@ export default function Dashboard() {
                     </div>
                     <p className="text-xs text-slate-500">Esta meta será exibida no gráfico de progresso do painel principal.</p>
                   </div>
+
+                  <div className="space-y-3 pt-2 border-t dark:border-slate-800">
+                    <Label className="flex items-center gap-2">
+                      <Paintbrush size={16} className="text-blue-500" />
+                      Cor da Marca
+                    </Label>
+                    <div className="flex flex-wrap gap-3">
+                      {[
+                        '#3b82f6', // Blue
+                        '#10b981', // Emerald
+                        '#f43f5e', // Rose
+                        '#8b5cf6', // Violet
+                        '#f59e0b', // Amber
+                        '#0ea5e9', // Sky
+                        '#6366f1', // Indigo
+                        '#ec4899', // Pink
+                      ].map((color) => (
+                        <button
+                          key={color}
+                          onClick={() => updateCompany(currentCompanyId!, { primaryColor: color })}
+                          className={cn(
+                            "w-10 h-10 rounded-full transition-all border-2",
+                            currentCompany?.primaryColor === color 
+                              ? "border-slate-900 dark:border-white scale-110 shadow-lg" 
+                              : "border-transparent hover:scale-110"
+                          )}
+                          style={{ backgroundColor: color }}
+                          title={color}
+                        />
+                      ))}
+                      <div className="flex items-center gap-2 ml-2">
+                        <div 
+                          className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700" 
+                          style={{ backgroundColor: currentCompany?.primaryColor }}
+                        />
+                        <Input 
+                          type="text" 
+                          className="w-24 h-9 text-xs" 
+                          value={currentCompany?.primaryColor || ''} 
+                          onChange={(e) => updateCompany(currentCompanyId!, { primaryColor: e.target.value })}
+                          placeholder="#000000"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500">Esta cor será aplicada a botões, ícones e destaques do sistema.</p>
+                  </div>
                 </CardContent>
               </Card>
 
