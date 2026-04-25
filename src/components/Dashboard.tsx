@@ -257,9 +257,20 @@ export default function Dashboard() {
                           />
                           Selecionar Arquivo
                         </Button>
+                        {currentCompany?.logo && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="w-full mt-2 text-rose-500 hover:text-rose-600 hover:bg-rose-50"
+                            onClick={() => updateCompany(currentCompanyId!, { logo: undefined })}
+                          >
+                            <Trash2 size={14} className="mr-2" /> Remover Logo
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
+
 
                   <div className="space-y-2">
                     <Label>Nome da Empresa</Label>
