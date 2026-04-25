@@ -29,15 +29,20 @@ export default function Login() {
     };
 
     if (isRegistering) {
+      const newId = Math.random().toString(36).substring(7);
       addCompany({
-        id: Math.random().toString(36).substring(7),
+        id: newId,
         name: companyName,
         primaryColor: '#3b82f6',
         businessType: 'Serviços',
       });
+      setCurrentCompany(newId);
+    } else if (companies.length > 0) {
+      setCurrentCompany(companies[0].id);
     }
 
     login(mockUser);
+
   };
 
   return (
