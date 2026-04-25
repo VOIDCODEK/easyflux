@@ -15,7 +15,11 @@ import {
   Sun,
   Camera,
   Paintbrush,
-  Trash2
+  Trash2,
+  Menu,
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
