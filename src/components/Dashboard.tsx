@@ -116,7 +116,7 @@ export default function Dashboard() {
             <img src={currentCompany.logo} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
           ) : (
             <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200 dark:shadow-none">
-              {currentCompany?.name.charAt(0) || 'F'}
+              {currentCompany?.name?.charAt(0) || 'F'}
             </div>
           )}
           <div className="overflow-hidden">
@@ -136,11 +136,12 @@ export default function Dashboard() {
         <div className="p-4 border-t dark:border-slate-800">
           <div className="flex items-center gap-3 px-4 py-3 mb-2">
             <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold text-xs uppercase">
-              {user.name.charAt(0)}
+              {user?.name?.charAt(0) || '?'}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-semibold dark:text-white truncate">{user.name}</p>
-              <p className="text-[10px] text-slate-500 truncate">{user.email}</p>
+              <p className="text-sm font-semibold dark:text-white truncate">{user?.name}</p>
+              <p className="text-[10px] text-slate-500 truncate">{user?.email}</p>
+
             </div>
           </div>
           <button onClick={logout} className="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-rose-600 transition-colors w-full rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/10">
