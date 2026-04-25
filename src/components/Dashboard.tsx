@@ -271,12 +271,10 @@ export default function Dashboard() {
               <Menu size={20} />
             </button>
             <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white capitalize truncate">
-              {activeTab === 'dashboard' ? 'Painel de Controle' : 
-               activeTab === 'income' ? 'Gestão de Entradas' :
-               activeTab === 'expenses' ? 'Gestão de Saídas' :
+              {activeTab === 'movements' ? 'Movimentações Financeiras' :
+               activeTab === 'dashboard' ? 'Painel de Controle' : 
                activeTab === 'products' ? 'Catálogo de Produtos' : 
-               activeTab === 'categories' ? 'Gestão de Categorias' : 
-               activeTab === 'recurring' ? 'Custos Fixos e Recorrência' : 'Configurações do Sistema'}
+               activeTab === 'categories' ? 'Gestão de Categorias' : 'Configurações do Sistema'}
             </h2>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
