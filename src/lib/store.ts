@@ -25,11 +25,11 @@ interface AppState {
   transactions: Transaction[];
   categories: string[];
   addCompany: (company: Company) => void;
-  updateCompany: (id: string, company: Partial<Company>) => void;
+  updateCompany: (id: string, updated: Partial<Company>) => void;
   setCurrentCompany: (id: string) => void;
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   deleteTransaction: (id: string) => void;
-  updateTransaction: (id: string, transaction: Partial<Transaction>) => void;
+  updateTransaction: (id: string, updated: Partial<Transaction>) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -44,7 +44,35 @@ export const useStore = create<AppState>()(
         },
       ],
       currentCompanyId: '1',
-      transactions: [],
+      transactions: [
+        {
+          id: 't1',
+          companyId: '1',
+          type: 'income',
+          value: 5000,
+          description: 'Serviço de Consultoria',
+          category: 'Serviço',
+          date: new Date().toISOString(),
+        },
+        {
+          id: 't2',
+          companyId: '1',
+          type: 'expense',
+          value: 1200,
+          description: 'Aluguel Escritório',
+          category: 'Aluguel',
+          date: new Date().toISOString(),
+        },
+        {
+          id: 't3',
+          companyId: '1',
+          type: 'expense',
+          value: 450,
+          description: 'Internet e Luz',
+          category: 'Manutenção',
+          date: new Date().toISOString(),
+        }
+      ],
       categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
       addCompany: (company: Company) =>
         set((state) => ({ companies: [...state.companies, company] })),
