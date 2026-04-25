@@ -80,7 +80,7 @@ export default function Dashboard() {
 
 
   
-  if (!user) return <Login />;
+  
   
   const companyTransactions = transactions.filter(t => t.companyId === currentCompanyId);
   
