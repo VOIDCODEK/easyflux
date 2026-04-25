@@ -56,6 +56,10 @@ export default function Dashboard() {
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('A imagem deve ter no máximo 2MB');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         updateCompany(currentCompanyId!, { logo: reader.result as string });
@@ -63,6 +67,7 @@ export default function Dashboard() {
       reader.readAsDataURL(file);
     }
   };
+
 
   
   if (!user) return <Login />;
