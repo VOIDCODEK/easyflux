@@ -13,9 +13,12 @@ export default function MovementsView() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-2xl font-bold dark:text-white">Movimentações Financeiras</h2>
-        <p className="text-slate-500">Gerencie todas as entradas, saídas e custos fixos da sua empresa.</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl font-bold dark:text-white">Movimentações Financeiras</h2>
+          <p className="text-slate-500">Gerencie todas as entradas, saídas e custos fixos da sua empresa.</p>
+        </div>
+        <PeriodSelector />
       </div>
 
       <Tabs defaultValue="income" className="w-full" onValueChange={setActiveSubTab}>
