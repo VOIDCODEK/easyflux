@@ -20,7 +20,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Tag
+  Tag,
+  RefreshCw
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
