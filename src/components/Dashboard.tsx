@@ -45,6 +45,7 @@ import Login from './Login';
 import ProductsView from './ProductsView';
 import TransactionsView from './TransactionsView';
 import CategoriesView from './CategoriesView';
+import RecurringTransactionsView from './RecurringTransactionsView';
 
 export default function Dashboard() {
   const { 
