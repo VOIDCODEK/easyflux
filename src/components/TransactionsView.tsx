@@ -50,7 +50,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
         )}>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Descrição</label>
-            <Input placeholder="Ex: Venda de Produto" value={desc} onChange={e => setDesc(e.target.value)} />
+            <Input placeholder="Ex: Venda de Produto" value={desc} onChange={e => setDesc(e.target.value)} disabled={isClosed} />
           </div>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Valor (R$)</label>
