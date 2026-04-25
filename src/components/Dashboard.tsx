@@ -261,6 +261,7 @@ export default function Dashboard() {
                   trend="+8.2%"
                   trendType="positive"
                   isHighlight 
+                  primaryColor={currentCompany?.primaryColor}
                 />
               </div>
               
