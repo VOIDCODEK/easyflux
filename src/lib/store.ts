@@ -75,6 +75,7 @@ interface AppState {
   addCategory: (category: string) => void;
   deleteCategory: (category: string) => void;
   setSelectedPeriod: (month: number, year: number) => void;
+  resetAllData: () => void;
 }
 
 export const useStore = create<AppState>()(
