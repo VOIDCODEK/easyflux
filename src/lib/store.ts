@@ -132,6 +132,27 @@ export const useStore = create<AppState>()(
       login: (user) => set({ user }),
       logout: () => set({ user: null }),
       setSelectedPeriod: (month, year) => set({ selectedMonth: month, selectedYear: year }),
+      toggleMonthStatus: (month, year) => set((state) => {
+        const companyId = state.currentCompanyId;
+        if (!companyId) return state;
+        
+        const periodKey = `${month}-${year}`;
+        const company = state.companies.find(c => c.id === companyId);
+        if (!company) return state;
+        
+        const closedMonths = company.closedMonths || [];
+        const isClosed = closedMonths.includes(periodKey);
+        
+        const newClosedMonths = isClosed 
+          ? closedMonths.filter(m => m !== periodKey)
+          : [...closedMonths, periodKey];
+          
+        return {
+          companies: state.companies.map(c => 
+            c.id === companyId ? { ...c, closedMonths: newClosedMonths } : c
+          )
+        };
+      }),
       setTheme: (theme) => {
         set({ theme });
         if (typeof document !== 'undefined') {
