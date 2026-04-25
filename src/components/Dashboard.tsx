@@ -50,6 +50,18 @@ export default function Dashboard() {
   
   const currentCompany = companies.find(c => c.id === currentCompanyId);
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateCompany(currentCompanyId!, { logo: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   
   if (!user) return <Login />;
   
