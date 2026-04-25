@@ -14,6 +14,7 @@ export interface Company {
   primaryColor: string;
   businessType: string;
   monthlyRevenueGoal?: number;
+  closedMonths?: string[]; // Format: "MM-YYYY"
 }
 
 export interface Product {
