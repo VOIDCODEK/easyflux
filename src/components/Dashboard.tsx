@@ -348,12 +348,19 @@ export default function Dashboard() {
 
                   <div className="space-y-2">
                     <Label>Meta de Receita Mensal (R$)</Label>
-                    <Input 
-                      type="number"
-                      value={currentCompany?.monthlyRevenueGoal || ''} 
-                      onChange={e => updateCompany(currentCompanyId!, { monthlyRevenueGoal: Number(e.target.value) })}
-                      placeholder="Ex: 10000"
-                    />
+                    <div className="flex gap-4">
+                      <Input 
+                        type="number"
+                        value={currentCompany?.monthlyRevenueGoal || ''} 
+                        onChange={e => updateCompany(currentCompanyId!, { monthlyRevenueGoal: Number(e.target.value) })}
+                        placeholder="Ex: 10000"
+                        className="flex-1"
+                      />
+                      <Button variant="outline" onClick={() => updateCompany(currentCompanyId!, { monthlyRevenueGoal: 0 })}>
+                        Zerar Meta
+                      </Button>
+                    </div>
+                    <p className="text-xs text-slate-500">Esta meta será exibida no gráfico de progresso do painel principal.</p>
                   </div>
                 </CardContent>
               </Card>
