@@ -119,13 +119,12 @@ export default function Dashboard() {
 
   const chartData = useMemo(() => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const currentMonth = new Date().getMonth();
     
-    // Get last 6 months including current
+    // Get 6 months ending at selected period
     const last6Months = [];
     for (let i = 5; i >= 0; i--) {
-      const d = new Date();
-      d.setMonth(currentMonth - i);
+      const d = new Date(selectedYear, selectedMonth);
+      d.setMonth(d.getMonth() - i);
       const monthIdx = d.getMonth();
       const year = d.getFullYear();
       
