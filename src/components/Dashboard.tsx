@@ -400,6 +400,8 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'movements' && <MovementsView />}
+          {activeTab === 'dashboard' && <div className="hidden">Dashboard hidden when activeTab is not dashboard but inside its fragment</div>}
+          {activeTab === 'reports' && <ReportsView />}
           {activeTab === 'products' && <ProductsView />}
           {activeTab === 'categories' && <CategoriesView />}
 
