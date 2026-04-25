@@ -65,6 +65,14 @@ export default function Dashboard() {
     return transactions.filter(t => t.companyId === currentCompanyId);
   }, [transactions, currentCompanyId]);
   
+  const currentMonthTransactions = useMemo(() => {
+    const now = new Date();
+    return companyTransactions.filter(t => {
+      const d = new Date(t.date);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    });
+  }, [companyTransactions]);
+
   const totalIncome = useMemo(() => {
     return companyTransactions
       .filter(t => t.type === 'income')
@@ -76,16 +84,52 @@ export default function Dashboard() {
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => acc + t.value, 0);
   }, [companyTransactions]);
+
+  const currentMonthIncome = useMemo(() => {
+    return currentMonthTransactions
+      .filter(t => t.type === 'income')
+      .reduce((acc, t) => acc + t.value, 0);
+  }, [currentMonthTransactions]);
     
   const netProfit = totalIncome - totalExpenses;
+  
+  const revenueGoal = currentCompany?.monthlyRevenueGoal || 0;
+  const revenueProgress = revenueGoal > 0 ? Math.min(Math.round((currentMonthIncome / revenueGoal) * 100), 100) : 0;
 
-  const chartData = useMemo(() => [
-    { name: 'Jan', income: 4000, expense: 2400 },
-    { name: 'Fev', income: 3000, expense: 1398 },
-    { name: 'Mar', income: 2000, expense: 3800 },
-    { name: 'Abr', income: 2780, expense: 3908 },
-    { name: 'Mai', income: totalIncome || 1890, expense: totalExpenses || 4800 },
-  ], [totalIncome, totalExpenses]);
+  const chartData = useMemo(() => {
+    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const currentMonth = new Date().getMonth();
+    
+    // Get last 6 months including current
+    const last6Months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(currentMonth - i);
+      const monthIdx = d.getMonth();
+      const year = d.getFullYear();
+      
+      const monthTransactions = companyTransactions.filter(t => {
+        const transDate = new Date(t.date);
+        return transDate.getMonth() === monthIdx && transDate.getFullYear() === year;
+      });
+      
+      const income = monthTransactions
+        .filter(t => t.type === 'income')
+        .reduce((acc, t) => acc + t.value, 0);
+        
+      const expense = monthTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => acc + t.value, 0);
+        
+      last6Months.push({
+        name: months[monthIdx],
+        income,
+        expense
+      });
+    }
+    
+    return last6Months;
+  }, [companyTransactions]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -227,11 +271,11 @@ export default function Dashboard() {
                       <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Metas do mês</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span className="dark:text-slate-400">Meta de Receita</span>
-                          <span className="font-semibold dark:text-white">85%</span>
+                          <span className="dark:text-slate-400">Meta de Receita ({formatCurrency(revenueGoal)})</span>
+                          <span className="font-semibold dark:text-white">{revenueProgress}%</span>
                         </div>
                         <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500 w-[85%]"></div>
+                          <div className={cn("h-full transition-all duration-500", revenueProgress >= 100 ? "bg-emerald-500" : "bg-blue-500")} style={{ width: `${revenueProgress}%` }}></div>
                         </div>
                       </div>
                     </div>
@@ -299,6 +343,16 @@ export default function Dashboard() {
                     <Input 
                       value={currentCompany?.name || ''} 
                       onChange={e => updateCompany(currentCompanyId!, { name: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Meta de Receita Mensal (R$)</Label>
+                    <Input 
+                      type="number"
+                      value={currentCompany?.monthlyRevenueGoal || ''} 
+                      onChange={e => updateCompany(currentCompanyId!, { monthlyRevenueGoal: Number(e.target.value) })}
+                      placeholder="Ex: 10000"
                     />
                   </div>
                 </CardContent>
