@@ -29,14 +29,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "EasyFlux" },
+      { name: "description", content: "Com o EasyFlux Você pode Monitorar entradas e saídas do seu negócio. Tendo mais Controle e Administração da sua empresa." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "EasyFlux" },
+      { property: "og:description", content: "Com o EasyFlux Você pode Monitorar entradas e saídas do seu negócio. Tendo mais Controle e Administração da sua empresa." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "EasyFlux" },
+      { name: "twitter:description", content: "Com o EasyFlux Você pode Monitorar entradas e saídas do seu negócio. Tendo mais Controle e Administração da sua empresa." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f3a4509-8408-45b8-b37d-20cd5d2751d7/id-preview-8ae5ec35--f08f2304-285d-4935-8e05-5c142ee32892.lovable.app-1777144724424.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f3a4509-8408-45b8-b37d-20cd5d2751d7/id-preview-8ae5ec35--f08f2304-285d-4935-8e05-5c142ee32892.lovable.app-1777144724424.png" },
     ],
     links: [
       {
