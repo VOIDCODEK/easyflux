@@ -277,6 +277,9 @@ export default function Dashboard() {
             </h2>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
+            <div className="hidden lg:block">
+              <PeriodSelector />
+            </div>
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
               {theme === 'light' ? <Moon size={20} className="text-slate-600" /> : <Sun size={20} className="text-yellow-400" />}
             </Button>
