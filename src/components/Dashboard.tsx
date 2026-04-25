@@ -317,6 +317,13 @@ export default function Dashboard() {
         <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto w-full">
           {activeTab === 'dashboard' && (
             <>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+                <div className="flex flex-col gap-1">
+                  <h2 className="text-2xl font-bold dark:text-white">Resumo Financeiro</h2>
+                  <p className="text-sm text-slate-500">Acompanhe a saúde financeira da sua empresa em tempo real.</p>
+                </div>
+                <PeriodSelector />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatsCard 
                   title="Total de Entradas" 
