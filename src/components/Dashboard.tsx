@@ -94,7 +94,7 @@ export default function Dashboard() {
   const netProfit = totalIncome - totalExpenses;
   
   const revenueGoal = currentCompany?.monthlyRevenueGoal || 0;
-  const revenueProgress = revenueGoal > 0 ? Math.min(Math.round((totalIncome / revenueGoal) * 100), 100) : 0;
+  const revenueProgress = revenueGoal > 0 ? Math.min(Math.round((currentMonthIncome / revenueGoal) * 100), 100) : 0;
 
   const chartData = useMemo(() => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
