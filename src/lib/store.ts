@@ -156,6 +156,16 @@ export const useStore = create<AppState>()(
         set((state) => ({
           products: state.products.filter((p) => p.id !== id),
         })),
+      addCategory: (category: string) =>
+        set((state) => ({
+          categories: state.categories.includes(category) 
+            ? state.categories 
+            : [...state.categories, category],
+        })),
+      deleteCategory: (category: string) =>
+        set((state) => ({
+          categories: state.categories.filter((c) => c !== category),
+        })),
     }),
     {
       name: 'finance-saas-storage',
