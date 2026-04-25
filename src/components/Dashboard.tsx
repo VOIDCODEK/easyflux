@@ -46,6 +46,7 @@ import Login from './Login';
 import ProductsView from './ProductsView';
 import CategoriesView from './CategoriesView';
 import MovementsView from './MovementsView';
+import { PeriodSelector } from './PeriodSelector';
 
 export default function Dashboard() {
   const { 
@@ -57,19 +58,21 @@ export default function Dashboard() {
     theme, 
     setTheme,
     updateCompany,
-    processRecurringTransactions 
+    processRecurringTransactions,
+    selectedMonth,
+    selectedYear
   } = useStore();
   
   const [activeTab, setActiveTab] = useState('movements');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Automatically process recurring transactions on load
+  // Automatically process recurring transactions on load or period change
   useEffect(() => {
     if (user) {
       processRecurringTransactions();
     }
-  }, [user, processRecurringTransactions]);
+  }, [user, processRecurringTransactions, selectedMonth, selectedYear]);
   
   const currentCompany = useMemo(() => {
     return companies.find(c => c.id === currentCompanyId) || companies[0] || {
@@ -85,12 +88,11 @@ export default function Dashboard() {
   }, [transactions, currentCompanyId]);
   
   const currentMonthTransactions = useMemo(() => {
-    const now = new Date();
     return companyTransactions.filter(t => {
       const d = new Date(t.date);
-      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear;
     });
-  }, [companyTransactions]);
+  }, [companyTransactions, selectedMonth, selectedYear]);
 
   const totalIncome = useMemo(() => {
     return companyTransactions
@@ -117,13 +119,12 @@ export default function Dashboard() {
 
   const chartData = useMemo(() => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const currentMonth = new Date().getMonth();
     
-    // Get last 6 months including current
+    // Get 6 months ending at selected period
     const last6Months = [];
     for (let i = 5; i >= 0; i--) {
-      const d = new Date();
-      d.setMonth(currentMonth - i);
+      const d = new Date(selectedYear, selectedMonth);
+      d.setMonth(d.getMonth() - i);
       const monthIdx = d.getMonth();
       const year = d.getFullYear();
       
@@ -148,7 +149,7 @@ export default function Dashboard() {
     }
     
     return last6Months;
-  }, [companyTransactions]);
+  }, [companyTransactions, selectedMonth, selectedYear]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -276,6 +277,9 @@ export default function Dashboard() {
             </h2>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
+            <div className="hidden lg:block">
+              <PeriodSelector />
+            </div>
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
               {theme === 'light' ? <Moon size={20} className="text-slate-600" /> : <Sun size={20} className="text-yellow-400" />}
             </Button>
