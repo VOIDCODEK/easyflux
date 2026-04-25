@@ -152,7 +152,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className={cn("flex min-h-screen", theme === 'dark' ? "dark bg-slate-950" : "bg-slate-50")}>
+    <div className={cn("flex min-h-screen transition-colors duration-300", theme === 'dark' ? "dark bg-slate-950" : "bg-slate-50")}>
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-slate-900 border-r dark:border-slate-800 hidden md:flex flex-col h-screen sticky top-0">
         <div className="p-6 flex items-center gap-3">
