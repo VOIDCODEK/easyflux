@@ -23,7 +23,9 @@ import {
   Tag,
   RefreshCw,
   ArrowLeftRight,
-  AlertCircle
+  AlertCircle,
+  BarChart3,
+  FileText
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
@@ -47,6 +49,7 @@ import Login from './Login';
 import ProductsView from './ProductsView';
 import CategoriesView from './CategoriesView';
 import MovementsView from './MovementsView';
+import ReportsView from './ReportsView';
 import { PeriodSelector } from './PeriodSelector';
 
 export default function Dashboard() {
