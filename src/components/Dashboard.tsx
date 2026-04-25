@@ -20,7 +20,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Tag
+  Tag,
+  RefreshCw
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
@@ -44,6 +45,7 @@ import Login from './Login';
 import ProductsView from './ProductsView';
 import TransactionsView from './TransactionsView';
 import CategoriesView from './CategoriesView';
+import RecurringTransactionsView from './RecurringTransactionsView';
 
 export default function Dashboard() {
   const { 
@@ -54,12 +56,20 @@ export default function Dashboard() {
     logout, 
     theme, 
     setTheme,
-    updateCompany 
+    updateCompany,
+    processRecurringTransactions 
   } = useStore();
   
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Automatically process recurring transactions on load
+  useEffect(() => {
+    if (user) {
+      processRecurringTransactions();
+    }
+  }, [user, processRecurringTransactions]);
   
   const currentCompany = useMemo(() => {
     return companies.find(c => c.id === currentCompanyId) || companies[0] || {
@@ -217,6 +227,7 @@ export default function Dashboard() {
               <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => { setActiveTab('products'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Tag size={20} />} label="Categorias" active={activeTab === 'categories'} onClick={() => { setActiveTab('categories'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
+              <NavItem icon={<RefreshCw size={20} />} label="Recorrência" active={activeTab === 'recurring'} onClick={() => { setActiveTab('recurring'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => { setActiveTab('income'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => { setActiveTab('expenses'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
@@ -264,7 +275,8 @@ export default function Dashboard() {
                activeTab === 'income' ? 'Gestão de Entradas' :
                activeTab === 'expenses' ? 'Gestão de Saídas' :
                activeTab === 'products' ? 'Catálogo de Produtos' : 
-               activeTab === 'categories' ? 'Gestão de Categorias' : 'Configurações do Sistema'}
+               activeTab === 'categories' ? 'Gestão de Categorias' : 
+               activeTab === 'recurring' ? 'Custos Fixos e Recorrência' : 'Configurações do Sistema'}
             </h2>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
@@ -378,6 +390,7 @@ export default function Dashboard() {
 
           {activeTab === 'products' && <ProductsView />}
           {activeTab === 'categories' && <CategoriesView />}
+          {activeTab === 'recurring' && <RecurringTransactionsView />}
           {activeTab === 'income' && <TransactionsView type="income" />}
           {activeTab === 'expenses' && <TransactionsView type="expense" />}
 

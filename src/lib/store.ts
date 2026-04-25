@@ -34,11 +34,23 @@ export interface Transaction {
   date: string;
 }
 
+export interface RecurringTransaction {
+  id: string;
+  companyId: string;
+  type: 'income' | 'expense';
+  value: number;
+  description: string;
+  category: string;
+  dayOfMonth: number;
+  active: boolean;
+}
+
 interface AppState {
   user: User | null;
   companies: Company[];
   currentCompanyId: string | null;
   transactions: Transaction[];
+  recurringTransactions: RecurringTransaction[];
   products: Product[];
   categories: string[];
   theme: 'light' | 'dark';
@@ -50,6 +62,10 @@ interface AppState {
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   deleteTransaction: (id: string) => void;
   updateTransaction: (id: string, updated: Partial<Transaction>) => void;
+  addRecurringTransaction: (transaction: Omit<RecurringTransaction, 'id'>) => void;
+  deleteRecurringTransaction: (id: string) => void;
+  updateRecurringTransaction: (id: string, updated: Partial<RecurringTransaction>) => void;
+  processRecurringTransactions: () => void;
   addProduct: (product: Omit<Product, 'id'>) => void;
   updateProduct: (id: string, updated: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
@@ -60,7 +76,7 @@ interface AppState {
 
 export const useStore = create<AppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       theme: 'light',
       companies: [
@@ -102,6 +118,7 @@ export const useStore = create<AppState>()(
           date: new Date().toISOString(),
         }
       ],
+      recurringTransactions: [],
       products: [],
       categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
       login: (user) => set({ user }),
@@ -141,6 +158,60 @@ export const useStore = create<AppState>()(
         set((state) => ({
           transactions: state.transactions.map((t) => (t.id === id ? { ...t, ...updated } : t)),
         })),
+      addRecurringTransaction: (transaction: Omit<RecurringTransaction, 'id'>) =>
+        set((state) => ({
+          recurringTransactions: [
+            ...state.recurringTransactions,
+            { ...transaction, id: Math.random().toString(36).substring(7) },
+          ],
+        })),
+      deleteRecurringTransaction: (id: string) =>
+        set((state) => ({
+          recurringTransactions: state.recurringTransactions.filter((t) => t.id !== id),
+        })),
+      updateRecurringTransaction: (id: string, updated: Partial<RecurringTransaction>) =>
+        set((state) => ({
+          recurringTransactions: state.recurringTransactions.map((t) => (t.id === id ? { ...t, ...updated } : t)),
+        })),
+      processRecurringTransactions: () => {
+        const state = get();
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        const newTransactions: Transaction[] = [];
+
+        state.recurringTransactions.forEach(rt => {
+          if (!rt.active) return;
+
+          // Check if transaction for this recurring item already exists in current month
+          const alreadyProcessed = state.transactions.some(t => 
+            t.description.includes(rt.description) && 
+            t.companyId === rt.companyId &&
+            new Date(t.date).getMonth() === currentMonth &&
+            new Date(t.date).getFullYear() === currentYear
+          );
+
+          if (!alreadyProcessed) {
+            const transDate = new Date();
+            transDate.setDate(rt.dayOfMonth);
+            
+            newTransactions.push({
+              id: Math.random().toString(36).substring(7),
+              companyId: rt.companyId,
+              type: rt.type,
+              value: rt.value,
+              description: `[FIXO] ${rt.description}`,
+              category: rt.category,
+              date: transDate.toISOString()
+            });
+          }
+        });
+
+        if (newTransactions.length > 0) {
+          set({ transactions: [...state.transactions, ...newTransactions] });
+        }
+      },
       addProduct: (product: Omit<Product, 'id'>) =>
         set((state) => ({
           products: [
