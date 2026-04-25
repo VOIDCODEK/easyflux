@@ -296,7 +296,13 @@ export default function Dashboard() {
                           <span className="font-semibold dark:text-white">{revenueProgress}%</span>
                         </div>
                         <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                          <div className={cn("h-full transition-all duration-500", revenueProgress >= 100 ? "bg-emerald-500" : "bg-blue-500")} style={{ width: `${revenueProgress}%` }}></div>
+                          <div 
+                            className={cn("h-full transition-all duration-500", revenueProgress >= 100 ? "bg-emerald-500" : "")} 
+                            style={{ 
+                              width: `${revenueProgress}%`,
+                              backgroundColor: revenueProgress < 100 ? currentCompany?.primaryColor : undefined
+                            }}
+                          ></div>
                         </div>
                       </div>
                     </div>
