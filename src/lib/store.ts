@@ -46,25 +46,25 @@ export const useStore = create<AppState>()(
       currentCompanyId: '1',
       transactions: [],
       categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
-      addCompany: (company) =>
+      addCompany: (company: Company) =>
         set((state) => ({ companies: [...state.companies, company] })),
-      updateCompany: (id, updated) =>
+      updateCompany: (id: string, updated: Partial<Company>) =>
         set((state) => ({
           companies: state.companies.map((c) => (c.id === id ? { ...c, ...updated } : c)),
         })),
-      setCurrentCompany: (id) => set({ currentCompanyId: id }),
-      addTransaction: (transaction) =>
+      setCurrentCompany: (id: string) => set({ currentCompanyId: id }),
+      addTransaction: (transaction: Omit<Transaction, 'id'>) =>
         set((state) => ({
           transactions: [
             ...state.transactions,
             { ...transaction, id: Math.random().toString(36).substring(7) },
           ],
         })),
-      deleteTransaction: (id) =>
+      deleteTransaction: (id: string) =>
         set((state) => ({
           transactions: state.transactions.filter((t) => t.id !== id),
         })),
-      updateTransaction: (id, updated) =>
+      updateTransaction: (id: string, updated: Partial<Transaction>) =>
         set((state) => ({
           transactions: state.transactions.map((t) => (t.id === id ? { ...t, ...updated } : t)),
         })),
