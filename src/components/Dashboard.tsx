@@ -21,7 +21,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Tag,
-  RefreshCw
+  RefreshCw,
+  ArrowLeftRight
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
@@ -46,6 +47,7 @@ import ProductsView from './ProductsView';
 import TransactionsView from './TransactionsView';
 import CategoriesView from './CategoriesView';
 import RecurringTransactionsView from './RecurringTransactionsView';
+import MovementsView from './MovementsView';
 
 export default function Dashboard() {
   const { 
