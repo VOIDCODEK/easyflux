@@ -390,6 +390,7 @@ export default function Dashboard() {
 
           {activeTab === 'products' && <ProductsView />}
           {activeTab === 'categories' && <CategoriesView />}
+          {activeTab === 'recurring' && <RecurringTransactionsView />}
           {activeTab === 'income' && <TransactionsView type="income" />}
           {activeTab === 'expenses' && <TransactionsView type="expense" />}
 
