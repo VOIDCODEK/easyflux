@@ -242,6 +242,24 @@ export const useStore = create<AppState>()(
         set((state) => ({
           categories: state.categories.filter((c) => c !== category),
         })),
+      resetAllData: () => set((state) => ({
+        transactions: [],
+        recurringTransactions: [],
+        products: [],
+        categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
+        companies: [
+          {
+            id: '1',
+            name: 'Minha Empresa Demo',
+            primaryColor: '#3b82f6',
+            businessType: 'Serviços',
+            monthlyRevenueGoal: 10000,
+          },
+        ],
+        currentCompanyId: '1',
+        selectedMonth: new Date().getMonth(),
+        selectedYear: new Date().getFullYear(),
+      })),
     }),
     {
       name: 'finance-saas-storage',
