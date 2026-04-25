@@ -22,7 +22,8 @@ import {
   ChevronRight,
   Tag,
   RefreshCw,
-  ArrowLeftRight
+  ArrowLeftRight,
+  AlertCircle
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
@@ -60,7 +61,8 @@ export default function Dashboard() {
     updateCompany,
     processRecurringTransactions,
     selectedMonth,
-    selectedYear
+    selectedYear,
+    resetAllData
   } = useStore();
   
   const [activeTab, setActiveTab] = useState('movements');
@@ -543,6 +545,36 @@ export default function Dashboard() {
                         Escuro
                       </button>
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-rose-200 dark:border-rose-900/30 bg-rose-50/30 dark:bg-rose-900/10">
+                <CardHeader>
+                  <CardTitle className="text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                    <AlertCircle size={20} /> Zona de Perigo
+                  </CardTitle>
+                  <CardDescription className="text-rose-500/80">Ações irreversíveis que afetam todos os dados</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-rose-100 dark:border-rose-900/20 bg-white dark:bg-slate-900">
+                    <div>
+                      <p className="font-bold text-slate-900 dark:text-white">Resetar Todo o Sistema</p>
+                      <p className="text-xs text-slate-500">Apaga todos os lançamentos, categorias, produtos e configurações de empresa.</p>
+                    </div>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => {
+                        if (confirm('ATENÇÃO: Isso apagará TODOS os dados do sistema (lançamentos, categorias, produtos, etc) e não poderá ser desfeito. Deseja continuar?')) {
+                          resetAllData();
+                          setActiveTab('dashboard');
+                          alert('Sistema resetado com sucesso.');
+                        }
+                      }}
+                    >
+                      Resetar Agora
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
