@@ -7,8 +7,9 @@ import RecurringTransactionsView from './RecurringTransactionsView';
 import { PeriodSelector } from './PeriodSelector';
 
 export default function MovementsView() {
-  const { companies, currentCompanyId } = useStore();
+  const { companies, currentCompanyId, selectedMonth, selectedYear } = useStore();
   const currentCompany = companies.find(c => c.id === currentCompanyId);
+  const isClosed = currentCompany?.closedMonths?.includes(`${selectedMonth}-${selectedYear}`);
   const [activeSubTab, setActiveSubTab] = useState('income');
 
   return (
