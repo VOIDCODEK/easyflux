@@ -386,11 +386,9 @@ export default function Dashboard() {
             </>
           )}
 
+          {activeTab === 'movements' && <MovementsView />}
           {activeTab === 'products' && <ProductsView />}
           {activeTab === 'categories' && <CategoriesView />}
-          {activeTab === 'recurring' && <RecurringTransactionsView />}
-          {activeTab === 'income' && <TransactionsView type="income" />}
-          {activeTab === 'expenses' && <TransactionsView type="expense" />}
 
           {activeTab === 'settings' && (
             <div className="max-w-2xl mx-auto space-y-6">
