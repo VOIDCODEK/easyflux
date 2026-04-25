@@ -331,6 +331,16 @@ export default function Dashboard() {
                       onChange={e => updateCompany(currentCompanyId!, { name: e.target.value })}
                     />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label>Meta de Receita Mensal (R$)</Label>
+                    <Input 
+                      type="number"
+                      value={currentCompany?.monthlyRevenueGoal || ''} 
+                      onChange={e => updateCompany(currentCompanyId!, { monthlyRevenueGoal: Number(e.target.value) })}
+                      placeholder="Ex: 10000"
+                    />
+                  </div>
                 </CardContent>
               </Card>
 
