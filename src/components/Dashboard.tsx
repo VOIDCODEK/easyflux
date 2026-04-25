@@ -65,6 +65,14 @@ export default function Dashboard() {
     return transactions.filter(t => t.companyId === currentCompanyId);
   }, [transactions, currentCompanyId]);
   
+  const currentMonthTransactions = useMemo(() => {
+    const now = new Date();
+    return companyTransactions.filter(t => {
+      const d = new Date(t.date);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    });
+  }, [companyTransactions]);
+
   const totalIncome = useMemo(() => {
     return companyTransactions
       .filter(t => t.type === 'income')
@@ -76,6 +84,12 @@ export default function Dashboard() {
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => acc + t.value, 0);
   }, [companyTransactions]);
+
+  const currentMonthIncome = useMemo(() => {
+    return currentMonthTransactions
+      .filter(t => t.type === 'income')
+      .reduce((acc, t) => acc + t.value, 0);
+  }, [currentMonthTransactions]);
     
   const netProfit = totalIncome - totalExpenses;
   
