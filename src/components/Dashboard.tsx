@@ -60,7 +60,8 @@ export default function Dashboard() {
     updateCompany,
     processRecurringTransactions,
     selectedMonth,
-    selectedYear
+    selectedYear,
+    resetAllData
   } = useStore();
   
   const [activeTab, setActiveTab] = useState('movements');
