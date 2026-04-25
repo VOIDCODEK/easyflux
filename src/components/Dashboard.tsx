@@ -257,11 +257,11 @@ export default function Dashboard() {
                       <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Metas do mês</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span className="dark:text-slate-400">Meta de Receita</span>
-                          <span className="font-semibold dark:text-white">85%</span>
+                          <span className="dark:text-slate-400">Meta de Receita ({formatCurrency(revenueGoal)})</span>
+                          <span className="font-semibold dark:text-white">{revenueProgress}%</span>
                         </div>
                         <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500 w-[85%]"></div>
+                          <div className={cn("h-full transition-all duration-500", revenueProgress >= 100 ? "bg-emerald-500" : "bg-blue-500")} style={{ width: `${revenueProgress}%` }}></div>
                         </div>
                       </div>
                     </div>
