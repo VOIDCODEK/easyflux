@@ -205,13 +205,27 @@ export default function Dashboard() {
              activeTab === 'products' ? 'Catálogo de Produtos' : 'Configurações do Sistema'}
           </h2>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
               {theme === 'light' ? <Moon size={20} className="text-slate-600" /> : <Sun size={20} className="text-yellow-400" />}
             </Button>
             <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 dark:shadow-none hidden sm:flex">
-              <Plus size={18} className="mr-1" /> Novo Registro
-            </Button>
+            
+            <div className="relative group">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 dark:shadow-none hidden sm:flex">
+                <Plus size={18} className="mr-1" /> Novo Registro
+              </Button>
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+                <button onClick={() => setActiveTab('income')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white">
+                  <TrendingUp size={16} className="text-emerald-500" /> Nova Entrada
+                </button>
+                <button onClick={() => setActiveTab('expenses')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
+                  <TrendingDown size={16} className="text-rose-500" /> Nova Saída
+                </button>
+                <button onClick={() => setActiveTab('products')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
+                  <Package size={16} className="text-blue-500" /> Novo Produto
+                </button>
+              </div>
+            </div>
           </div>
         </header>
 
