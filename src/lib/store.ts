@@ -54,6 +54,8 @@ interface AppState {
   products: Product[];
   categories: string[];
   theme: 'light' | 'dark';
+  selectedMonth: number;
+  selectedYear: number;
   login: (user: User) => void;
   logout: () => void;
   addCompany: (company: Company) => void;
@@ -72,6 +74,7 @@ interface AppState {
   setTheme: (theme: 'light' | 'dark') => void;
   addCategory: (category: string) => void;
   deleteCategory: (category: string) => void;
+  setSelectedPeriod: (month: number, year: number) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -79,6 +82,8 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       user: null,
       theme: 'light',
+      selectedMonth: new Date().getMonth(),
+      selectedYear: new Date().getFullYear(),
       companies: [
         {
           id: '1',
@@ -123,6 +128,7 @@ export const useStore = create<AppState>()(
       categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
       login: (user) => set({ user }),
       logout: () => set({ user: null }),
+      setSelectedPeriod: (month, year) => set({ selectedMonth: month, selectedYear: year }),
       setTheme: (theme) => {
         set({ theme });
         if (typeof document !== 'undefined') {
@@ -175,26 +181,24 @@ export const useStore = create<AppState>()(
         })),
       processRecurringTransactions: () => {
         const state = get();
-        const now = new Date();
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
+        const month = state.selectedMonth;
+        const year = state.selectedYear;
 
         const newTransactions: Transaction[] = [];
 
         state.recurringTransactions.forEach(rt => {
           if (!rt.active) return;
 
-          // Check if transaction for this recurring item already exists in current month
+          // Check if transaction for this recurring item already exists in selected month/year
           const alreadyProcessed = state.transactions.some(t => 
             t.description.includes(rt.description) && 
             t.companyId === rt.companyId &&
-            new Date(t.date).getMonth() === currentMonth &&
-            new Date(t.date).getFullYear() === currentYear
+            new Date(t.date).getMonth() === month &&
+            new Date(t.date).getFullYear() === year
           );
 
           if (!alreadyProcessed) {
-            const transDate = new Date();
-            transDate.setDate(rt.dayOfMonth);
+            const transDate = new Date(year, month, rt.dayOfMonth);
             
             newTransactions.push({
               id: Math.random().toString(36).substring(7),
