@@ -88,12 +88,11 @@ export default function Dashboard() {
   }, [transactions, currentCompanyId]);
   
   const currentMonthTransactions = useMemo(() => {
-    const now = new Date();
     return companyTransactions.filter(t => {
       const d = new Date(t.date);
-      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear;
     });
-  }, [companyTransactions]);
+  }, [companyTransactions, selectedMonth, selectedYear]);
 
   const totalIncome = useMemo(() => {
     return companyTransactions
