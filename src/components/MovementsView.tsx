@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
+import { TrendingUp, TrendingDown, RefreshCw, Lock } from 'lucide-react';
 import TransactionsView from './TransactionsView';
 import RecurringTransactionsView from './RecurringTransactionsView';
 import { PeriodSelector } from './PeriodSelector';
 
 export default function MovementsView() {
-  const { companies, currentCompanyId } = useStore();
+  const { companies, currentCompanyId, selectedMonth, selectedYear } = useStore();
   const currentCompany = companies.find(c => c.id === currentCompanyId);
+  const isClosed = currentCompany?.closedMonths?.includes(`${selectedMonth}-${selectedYear}`);
   const [activeSubTab, setActiveSubTab] = useState('income');
 
   return (
@@ -22,6 +23,18 @@ export default function MovementsView() {
           <PeriodSelector />
         </div>
       </div>
+
+      {isClosed && (
+        <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 p-4 rounded-2xl flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+            <Lock size={20} />
+          </div>
+          <div>
+            <p className="font-bold text-amber-900 dark:text-amber-400">Período Trancado</p>
+            <p className="text-sm text-amber-700 dark:text-amber-500/80">Este mês foi concluído nos relatórios e novos lançamentos estão desabilitados.</p>
+          </div>
+        </div>
+      )}
 
       <Tabs defaultValue="income" className="w-full" onValueChange={setActiveSubTab}>
         <TabsList className="grid w-full grid-cols-3 mb-8 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl h-auto">

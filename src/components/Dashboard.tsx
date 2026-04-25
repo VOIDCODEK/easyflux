@@ -23,7 +23,9 @@ import {
   Tag,
   RefreshCw,
   ArrowLeftRight,
-  AlertCircle
+  AlertCircle,
+  BarChart3,
+  FileText
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
@@ -47,6 +49,7 @@ import Login from './Login';
 import ProductsView from './ProductsView';
 import CategoriesView from './CategoriesView';
 import MovementsView from './MovementsView';
+import ReportsView from './ReportsView';
 import { PeriodSelector } from './PeriodSelector';
 
 export default function Dashboard() {
@@ -229,6 +232,7 @@ export default function Dashboard() {
             <nav className="flex-1 px-4 py-4 space-y-1 min-w-[256px]">
               <NavItem icon={<ArrowLeftRight size={20} />} label="Movimentações" active={activeTab === 'movements'} onClick={() => { setActiveTab('movements'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
+              <NavItem icon={<BarChart3 size={20} />} label="Relatórios" active={activeTab === 'reports'} onClick={() => { setActiveTab('reports'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => { setActiveTab('products'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Tag size={20} />} label="Categorias" active={activeTab === 'categories'} onClick={() => { setActiveTab('categories'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
               <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsMobileMenuOpen(false); }} primaryColor={currentCompany?.primaryColor} />
@@ -274,14 +278,12 @@ export default function Dashboard() {
             <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white capitalize truncate">
               {activeTab === 'movements' ? 'Movimentações Financeiras' :
                activeTab === 'dashboard' ? 'Painel de Controle' : 
+               activeTab === 'reports' ? 'Relatórios Financeiros' :
                activeTab === 'products' ? 'Catálogo de Produtos' : 
                activeTab === 'categories' ? 'Gestão de Categorias' : 'Configurações do Sistema'}
             </h2>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
-            <div className="hidden lg:block">
-              <PeriodSelector />
-            </div>
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
               {theme === 'light' ? <Moon size={20} className="text-slate-600" /> : <Sun size={20} className="text-yellow-400" />}
             </Button>
@@ -316,6 +318,13 @@ export default function Dashboard() {
         <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto w-full">
           {activeTab === 'dashboard' && (
             <>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+                <div className="flex flex-col gap-1">
+                  <h2 className="text-2xl font-bold dark:text-white">Resumo Financeiro</h2>
+                  <p className="text-sm text-slate-500">Acompanhe a saúde financeira da sua empresa em tempo real.</p>
+                </div>
+                <PeriodSelector />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatsCard 
                   title="Total de Entradas" 
@@ -391,6 +400,7 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'movements' && <MovementsView />}
+          {activeTab === 'reports' && <ReportsView />}
           {activeTab === 'products' && <ProductsView />}
           {activeTab === 'categories' && <CategoriesView />}
 

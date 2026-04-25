@@ -7,7 +7,10 @@ import { formatCurrency, cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
 export default function TransactionsView({ type }: { type: 'income' | 'expense' }) {
-  const { transactions, addTransaction, deleteTransaction, currentCompanyId, selectedMonth, selectedYear } = useStore();
+  const { transactions, addTransaction, deleteTransaction, currentCompanyId, selectedMonth, selectedYear, companies } = useStore();
+  const currentCompany = companies.find(c => c.id === currentCompanyId);
+  const isClosed = currentCompany?.closedMonths?.includes(`${selectedMonth}-${selectedYear}`);
+  
   const [desc, setDesc] = useState('');
   const [val, setVal] = useState('');
   
@@ -47,11 +50,11 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
         )}>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Descrição</label>
-            <Input placeholder="Ex: Venda de Produto" value={desc} onChange={e => setDesc(e.target.value)} />
+            <Input placeholder="Ex: Venda de Produto" value={desc} onChange={e => setDesc(e.target.value)} disabled={isClosed} />
           </div>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Valor (R$)</label>
-            <Input type="number" placeholder="0,00" value={val} onChange={e => setVal(e.target.value)} />
+            <Input type="number" placeholder="0,00" value={val} onChange={e => setVal(e.target.value)} disabled={isClosed} />
           </div>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Data</label>
@@ -73,6 +76,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
           )}
           <div className="flex items-end">
             <Button 
+              disabled={isClosed}
               onClick={() => { 
                 if (!desc || !val) return;
                 addTransaction({ 
@@ -87,7 +91,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
               }} 
               className={cn("w-full", type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700')}
             >
-              <Plus size={18} className="mr-2" /> Registrar
+              <Plus size={18} className="mr-2" /> {isClosed ? 'Mês Fechado' : 'Registrar'}
             </Button>
           </div>
         </CardContent>
@@ -111,7 +115,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
                 <p className={cn("font-bold", type === 'income' ? "text-emerald-600" : "text-rose-600")}>
                   {type === 'income' ? '+' : '-'} {formatCurrency(t.value)}
                 </p>
-                <Button variant="ghost" size="icon" onClick={() => deleteTransaction(t.id)} className="text-slate-400 hover:text-rose-500">
+                <Button variant="ghost" size="icon" onClick={() => !isClosed && deleteTransaction(t.id)} className={cn("text-slate-400 hover:text-rose-500", isClosed && "opacity-50 cursor-not-allowed")}>
                   <Trash2 size={16} />
                 </Button>
               </div>
