@@ -67,6 +67,7 @@ export const useStore = create<AppState>()(
           name: 'Minha Empresa Demo',
           primaryColor: '#3b82f6',
           businessType: 'Serviços',
+          monthlyRevenueGoal: 10000,
         },
       ],
       currentCompanyId: '1',
