@@ -275,7 +275,7 @@ export default function Dashboard() {
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
                         <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} tickFormatter={(val) => `R$ ${val}`} />
                         <Tooltip cursor={{fill: theme === 'dark' ? '#0f172a' : '#f8fafc'}} contentStyle={{backgroundColor: theme === 'dark' ? '#1e293b' : '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
-                        <Bar dataKey="income" fill="#10b981" radius={[4, 4, 0, 0]} barSize={32} name="Entradas" />
+                        <Bar dataKey="income" fill={currentCompany?.primaryColor || "#10b981"} radius={[4, 4, 0, 0]} barSize={32} name="Entradas" />
                         <Bar dataKey="expense" fill="#f43f5e" radius={[4, 4, 0, 0]} barSize={32} name="Saídas" />
                       </BarChart>
                     </ResponsiveContainer>
