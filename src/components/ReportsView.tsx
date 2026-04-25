@@ -77,7 +77,12 @@ export default function ReportsView() {
         <div className="flex items-center gap-3">
           <PeriodSelector />
           <Button 
-            onClick={() => toggleMonthStatus(selectedMonth, selectedYear)}
+            onClick={() => {
+              const action = isClosed ? 'reabrir' : 'fechar';
+              if (confirm(`Deseja realmente ${action} este mês?`)) {
+                toggleMonthStatus(selectedMonth, selectedYear);
+              }
+            }}
             variant={isClosed ? "outline" : "default"}
             className={cn(
               "flex items-center gap-2 font-bold transition-all",
