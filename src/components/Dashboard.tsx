@@ -44,9 +44,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Login from './Login';
 import ProductsView from './ProductsView';
-import TransactionsView from './TransactionsView';
 import CategoriesView from './CategoriesView';
-import RecurringTransactionsView from './RecurringTransactionsView';
+import MovementsView from './MovementsView';
 import MovementsView from './MovementsView';
 
 export default function Dashboard() {
