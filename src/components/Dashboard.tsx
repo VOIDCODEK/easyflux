@@ -22,7 +22,8 @@ import {
   ChevronRight,
   Tag,
   RefreshCw,
-  ArrowLeftRight
+  ArrowLeftRight,
+  AlertCircle
 } from 'lucide-react';
 
 import { useStore } from '@/lib/store';
