@@ -167,7 +167,7 @@ export default function Dashboard() {
             </div>
           )}
           <div className="overflow-hidden">
-            <h1 className="font-bold text-slate-900 dark:text-white leading-tight truncate">SaaS Finance</h1>
+            <h1 className="font-bold leading-tight truncate rounded-none text-slate-100">Easy Flux</h1>
             <p className="text-xs text-slate-500 truncate">{currentCompany?.name}</p>
           </div>
         </div>
