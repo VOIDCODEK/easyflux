@@ -54,6 +54,10 @@ export default function Dashboard() {
     updateCompany 
   } = useStore();
   
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   const currentCompany = useMemo(() => {
     return companies.find(c => c.id === currentCompanyId) || companies[0] || {
       id: 'fallback',
@@ -62,8 +66,6 @@ export default function Dashboard() {
       businessType: 'Serviços'
     };
   }, [companies, currentCompanyId]);
-
-  const [activeTab, setActiveTab] = useState('dashboard');
 
   const companyTransactions = useMemo(() => {
     return transactions.filter(t => t.companyId === currentCompanyId);
