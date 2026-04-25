@@ -58,7 +58,9 @@ export default function Dashboard() {
     theme, 
     setTheme,
     updateCompany,
-    processRecurringTransactions 
+    processRecurringTransactions,
+    selectedMonth,
+    selectedYear
   } = useStore();
   
   const [activeTab, setActiveTab] = useState('movements');
