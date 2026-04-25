@@ -468,11 +468,12 @@ export default function Dashboard() {
   );
 }
 
-function NavItem({ icon, label, active, onClick }: {
+function NavItem({ icon, label, active, onClick, primaryColor }: {
   icon: React.ReactNode;
   label: string;
   active: boolean;
   onClick: () => void;
+  primaryColor?: string;
 }) {
   return (
     <button 
@@ -480,11 +481,15 @@ function NavItem({ icon, label, active, onClick }: {
       className={cn(
         "flex items-center gap-3 px-4 py-3 rounded-lg w-full transition-all font-medium text-sm", 
         active 
-          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" 
+          ? "shadow-sm" 
           : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
       )}
+      style={active ? { 
+        backgroundColor: `${primaryColor}15`, // 15 is hex for ~8% opacity
+        color: primaryColor 
+      } : {}}
     >
-      {icon}
+      <div style={active ? { color: primaryColor } : {}}>{icon}</div>
       <span>{label}</span>
     </button>
   );
