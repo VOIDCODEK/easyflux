@@ -50,8 +50,9 @@ export default function Dashboard() {
     updateCompany 
   } = useStore();
   
-  const currentCompany = companies.find(c => c.id === currentCompanyId);
+  const currentCompany = companies.find(c => c.id === currentCompanyId) || companies[0];
   const [activeTab, setActiveTab] = useState('dashboard');
+
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
