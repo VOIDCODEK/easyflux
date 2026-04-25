@@ -79,13 +79,40 @@ export default function Dashboard() {
     
   const netProfit = totalIncome - totalExpenses;
 
-  const chartData = useMemo(() => [
-    { name: 'Jan', income: 4000, expense: 2400 },
-    { name: 'Fev', income: 3000, expense: 1398 },
-    { name: 'Mar', income: 2000, expense: 3800 },
-    { name: 'Abr', income: 2780, expense: 3908 },
-    { name: 'Mai', income: totalIncome || 1890, expense: totalExpenses || 4800 },
-  ], [totalIncome, totalExpenses]);
+  const chartData = useMemo(() => {
+    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const currentMonth = new Date().getMonth();
+    
+    // Get last 6 months including current
+    const last6Months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(currentMonth - i);
+      const monthIdx = d.getMonth();
+      const year = d.getFullYear();
+      
+      const monthTransactions = companyTransactions.filter(t => {
+        const transDate = new Date(t.date);
+        return transDate.getMonth() === monthIdx && transDate.getFullYear() === year;
+      });
+      
+      const income = monthTransactions
+        .filter(t => t.type === 'income')
+        .reduce((acc, t) => acc + t.value, 0);
+        
+      const expense = monthTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => acc + t.value, 0);
+        
+      last6Months.push({
+        name: months[monthIdx],
+        income,
+        expense
+      });
+    }
+    
+    return last6Months;
+  }, [companyTransactions]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
