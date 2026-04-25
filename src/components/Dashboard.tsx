@@ -347,7 +347,15 @@ function NavItem({ icon, label, active, onClick }: any) {
   );
 }
 
-function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }: any) {
+function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }: {
+  title: string;
+  value: string;
+  icon: React.ReactNode;
+  trend?: string;
+  trendType?: 'positive' | 'negative';
+  isHighlight?: boolean;
+}) {
+
   return (
     <Card className={cn(
       "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-md", 
