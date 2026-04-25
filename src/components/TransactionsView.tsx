@@ -76,6 +76,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
           )}
           <div className="flex items-end">
             <Button 
+              disabled={isClosed}
               onClick={() => { 
                 if (!desc || !val) return;
                 addTransaction({ 
@@ -90,7 +91,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
               }} 
               className={cn("w-full", type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700')}
             >
-              <Plus size={18} className="mr-2" /> Registrar
+              <Plus size={18} className="mr-2" /> {isClosed ? 'Mês Fechado' : 'Registrar'}
             </Button>
           </div>
         </CardContent>
