@@ -46,6 +46,7 @@ import Login from './Login';
 import ProductsView from './ProductsView';
 import CategoriesView from './CategoriesView';
 import MovementsView from './MovementsView';
+import { PeriodSelector } from './PeriodSelector';
 
 export default function Dashboard() {
   const { 
