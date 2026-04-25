@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Building2, Lock, Mail, User } from 'lucide-react';
+import { Building2, Lock, Mail, User, ArrowRight } from 'lucide-react';
+import { AnimatedBackground } from './AnimatedBackground';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
