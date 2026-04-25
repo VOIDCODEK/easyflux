@@ -13,6 +13,7 @@ export interface Company {
   logo?: string;
   primaryColor: string;
   businessType: string;
+  monthlyRevenueGoal?: number;
 }
 
 export interface Product {
