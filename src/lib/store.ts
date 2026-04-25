@@ -1,12 +1,26 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
 export interface Company {
   id: string;
   name: string;
   logo?: string;
   primaryColor: string;
   businessType: string;
+}
+
+export interface Product {
+  id: string;
+  companyId: string;
+  name: string;
+  price: number;
+  stock: number;
 }
 
 export interface Transaction {
@@ -20,21 +34,32 @@ export interface Transaction {
 }
 
 interface AppState {
+  user: User | null;
   companies: Company[];
   currentCompanyId: string | null;
   transactions: Transaction[];
+  products: Product[];
   categories: string[];
+  theme: 'light' | 'dark';
+  login: (user: User) => void;
+  logout: () => void;
   addCompany: (company: Company) => void;
   updateCompany: (id: string, updated: Partial<Company>) => void;
   setCurrentCompany: (id: string) => void;
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   deleteTransaction: (id: string) => void;
   updateTransaction: (id: string, updated: Partial<Transaction>) => void;
+  addProduct: (product: Omit<Product, 'id'>) => void;
+  updateProduct: (id: string, updated: Partial<Product>) => void;
+  deleteProduct: (id: string) => void;
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 export const useStore = create<AppState>()(
   persist(
     (set) => ({
+      user: null,
+      theme: 'light',
       companies: [
         {
           id: '1',
@@ -73,7 +98,18 @@ export const useStore = create<AppState>()(
           date: new Date().toISOString(),
         }
       ],
+      products: [],
       categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
+      login: (user) => set({ user }),
+      logout: () => set({ user: null }),
+      setTheme: (theme) => {
+        set({ theme });
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      },
       addCompany: (company: Company) =>
         set((state) => ({ companies: [...state.companies, company] })),
       updateCompany: (id: string, updated: Partial<Company>) =>
@@ -95,6 +131,21 @@ export const useStore = create<AppState>()(
       updateTransaction: (id: string, updated: Partial<Transaction>) =>
         set((state) => ({
           transactions: state.transactions.map((t) => (t.id === id ? { ...t, ...updated } : t)),
+        })),
+      addProduct: (product: Omit<Product, 'id'>) =>
+        set((state) => ({
+          products: [
+            ...state.products,
+            { ...product, id: Math.random().toString(36).substring(7) },
+          ],
+        })),
+      updateProduct: (id: string, updated: Partial<Product>) =>
+        set((state) => ({
+          products: state.products.map((p) => (p.id === id ? { ...p, ...updated } : p)),
+        })),
+      deleteProduct: (id: string) =>
+        set((state) => ({
+          products: state.products.filter((p) => p.id !== id),
         })),
     }),
     {
