@@ -67,12 +67,12 @@ export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Automatically process recurring transactions on load
+  // Automatically process recurring transactions on load or period change
   useEffect(() => {
     if (user) {
       processRecurringTransactions();
     }
-  }, [user, processRecurringTransactions]);
+  }, [user, processRecurringTransactions, selectedMonth, selectedYear]);
   
   const currentCompany = useMemo(() => {
     return companies.find(c => c.id === currentCompanyId) || companies[0] || {
