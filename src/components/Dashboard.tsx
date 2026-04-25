@@ -159,7 +159,10 @@ export default function Dashboard() {
           {currentCompany?.logo ? (
             <img src={currentCompany.logo} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
           ) : (
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200 dark:shadow-none">
+            <div 
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg"
+              style={{ backgroundColor: currentCompany?.primaryColor || '#3b82f6' }}
+            >
               {currentCompany?.name?.charAt(0) || 'F'}
             </div>
           )}
@@ -170,11 +173,11 @@ export default function Dashboard() {
         </div>
         
         <nav className="flex-1 px-4 py-4 space-y-1">
-          <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
-          <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => setActiveTab('products')} />
-          <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => setActiveTab('income')} />
-          <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => setActiveTab('expenses')} />
-          <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+          <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => setActiveTab('products')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => setActiveTab('income')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => setActiveTab('expenses')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} primaryColor={currentCompany?.primaryColor} />
         </nav>
 
         <div className="p-4 border-t dark:border-slate-800">
@@ -211,7 +214,11 @@ export default function Dashboard() {
             <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
             
             <div className="relative group">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 dark:shadow-none hidden sm:flex">
+              <Button 
+                size="sm" 
+                className="hover:opacity-90 shadow-md transition-all hidden sm:flex border-none text-white"
+                style={{ backgroundColor: currentCompany?.primaryColor || '#3b82f6' }}
+              >
                 <Plus size={18} className="mr-1" /> Novo Registro
               </Button>
               <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 border dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
@@ -250,10 +257,11 @@ export default function Dashboard() {
                 <StatsCard 
                   title="Lucro Líquido" 
                   value={formatCurrency(netProfit)} 
-                  icon={<DollarSign className="text-blue-500" />} 
+                  icon={<DollarSign style={{ color: currentCompany?.primaryColor }} />} 
                   trend="+8.2%"
                   trendType="positive"
                   isHighlight 
+                  primaryColor={currentCompany?.primaryColor}
                 />
               </div>
               
@@ -267,7 +275,7 @@ export default function Dashboard() {
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
                         <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} tickFormatter={(val) => `R$ ${val}`} />
                         <Tooltip cursor={{fill: theme === 'dark' ? '#0f172a' : '#f8fafc'}} contentStyle={{backgroundColor: theme === 'dark' ? '#1e293b' : '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
-                        <Bar dataKey="income" fill="#10b981" radius={[4, 4, 0, 0]} barSize={32} name="Entradas" />
+                        <Bar dataKey="income" fill={currentCompany?.primaryColor || "#10b981"} radius={[4, 4, 0, 0]} barSize={32} name="Entradas" />
                         <Bar dataKey="expense" fill="#f43f5e" radius={[4, 4, 0, 0]} barSize={32} name="Saídas" />
                       </BarChart>
                     </ResponsiveContainer>
@@ -289,7 +297,13 @@ export default function Dashboard() {
                           <span className="font-semibold dark:text-white">{revenueProgress}%</span>
                         </div>
                         <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                          <div className={cn("h-full transition-all duration-500", revenueProgress >= 100 ? "bg-emerald-500" : "bg-blue-500")} style={{ width: `${revenueProgress}%` }}></div>
+                          <div 
+                            className={cn("h-full transition-all duration-500", revenueProgress >= 100 ? "bg-emerald-500" : "")} 
+                            style={{ 
+                              width: `${revenueProgress}%`,
+                              backgroundColor: revenueProgress < 100 ? currentCompany?.primaryColor : undefined
+                            }}
+                          ></div>
                         </div>
                       </div>
                     </div>
@@ -376,6 +390,52 @@ export default function Dashboard() {
                     </div>
                     <p className="text-xs text-slate-500">Esta meta será exibida no gráfico de progresso do painel principal.</p>
                   </div>
+
+                  <div className="space-y-3 pt-2 border-t dark:border-slate-800">
+                    <Label className="flex items-center gap-2">
+                      <Paintbrush size={16} className="text-blue-500" />
+                      Cor da Marca
+                    </Label>
+                    <div className="flex flex-wrap gap-3">
+                      {[
+                        '#3b82f6', // Blue
+                        '#10b981', // Emerald
+                        '#f43f5e', // Rose
+                        '#8b5cf6', // Violet
+                        '#f59e0b', // Amber
+                        '#0ea5e9', // Sky
+                        '#6366f1', // Indigo
+                        '#ec4899', // Pink
+                      ].map((color) => (
+                        <button
+                          key={color}
+                          onClick={() => updateCompany(currentCompanyId!, { primaryColor: color })}
+                          className={cn(
+                            "w-10 h-10 rounded-full transition-all border-2",
+                            currentCompany?.primaryColor === color 
+                              ? "border-slate-900 dark:border-white scale-110 shadow-lg" 
+                              : "border-transparent hover:scale-110"
+                          )}
+                          style={{ backgroundColor: color }}
+                          title={color}
+                        />
+                      ))}
+                      <div className="flex items-center gap-2 ml-2">
+                        <div 
+                          className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700" 
+                          style={{ backgroundColor: currentCompany?.primaryColor }}
+                        />
+                        <Input 
+                          type="text" 
+                          className="w-24 h-9 text-xs" 
+                          value={currentCompany?.primaryColor || ''} 
+                          onChange={(e) => updateCompany(currentCompanyId!, { primaryColor: e.target.value })}
+                          placeholder="#000000"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500">Esta cor será aplicada a botões, ícones e destaques do sistema.</p>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -419,11 +479,12 @@ export default function Dashboard() {
   );
 }
 
-function NavItem({ icon, label, active, onClick }: {
+function NavItem({ icon, label, active, onClick, primaryColor }: {
   icon: React.ReactNode;
   label: string;
   active: boolean;
   onClick: () => void;
+  primaryColor?: string;
 }) {
   return (
     <button 
@@ -431,29 +492,40 @@ function NavItem({ icon, label, active, onClick }: {
       className={cn(
         "flex items-center gap-3 px-4 py-3 rounded-lg w-full transition-all font-medium text-sm", 
         active 
-          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" 
+          ? "shadow-sm" 
           : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
       )}
+      style={active ? { 
+        backgroundColor: `${primaryColor}15`, // 15 is hex for ~8% opacity
+        color: primaryColor 
+      } : {}}
     >
-      {icon}
+      <div style={active ? { color: primaryColor } : {}}>{icon}</div>
       <span>{label}</span>
     </button>
   );
 }
 
-function StatsCard({ title, value, icon, trend, trendType, isHighlight = false }: {
+function StatsCard({ title, value, icon, trend, trendType, isHighlight = false, primaryColor }: {
   title: string;
   value: string;
   icon: React.ReactNode;
   trend?: string;
   trendType?: 'positive' | 'negative';
   isHighlight?: boolean;
+  primaryColor?: string;
 }) {
   return (
-    <Card className={cn(
-      "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-lg hover:-translate-y-1", 
-      isHighlight && "border-blue-200 bg-blue-50/30 dark:bg-blue-900/10 dark:border-blue-900/50"
-    )}>
+    <Card 
+      className={cn(
+        "shadow-sm dark:bg-slate-900 dark:border-slate-800 transition-all hover:shadow-lg hover:-translate-y-1", 
+        isHighlight && "border-opacity-50"
+      )}
+      style={isHighlight ? { 
+        borderColor: primaryColor,
+        backgroundColor: `${primaryColor}05` // very light background
+      } : {}}
+    >
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border dark:border-slate-700 shadow-sm flex items-center justify-center">

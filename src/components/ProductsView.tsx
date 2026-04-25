@@ -7,7 +7,8 @@ import { formatCurrency } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
 export default function ProductsView() {
-  const { products, addProduct, deleteProduct, currentCompanyId } = useStore();
+  const { products, addProduct, deleteProduct, currentCompanyId, companies } = useStore();
+  const currentCompany = companies.find(c => c.id === currentCompanyId);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
 
@@ -32,7 +33,11 @@ export default function ProductsView() {
         <CardContent className="flex flex-col sm:flex-row gap-4">
           <Input placeholder="Nome do produto" value={name} onChange={e => setName(e.target.value)} />
           <Input type="number" placeholder="Preço" value={price} onChange={e => setPrice(e.target.value)} />
-          <Button onClick={handleAdd}>
+          <Button 
+            onClick={handleAdd}
+            className="text-white"
+            style={{ backgroundColor: currentCompany?.primaryColor || '#3b82f6' }}
+          >
             <Plus size={18} className="mr-2" /> Adicionar
           </Button>
         </CardContent>
