@@ -374,6 +374,7 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'products' && <ProductsView />}
+          {activeTab === 'categories' && <CategoriesView />}
           {activeTab === 'income' && <TransactionsView type="income" />}
           {activeTab === 'expenses' && <TransactionsView type="expense" />}
 
