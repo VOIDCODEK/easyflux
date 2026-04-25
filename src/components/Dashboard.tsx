@@ -159,7 +159,10 @@ export default function Dashboard() {
           {currentCompany?.logo ? (
             <img src={currentCompany.logo} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
           ) : (
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200 dark:shadow-none">
+            <div 
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg"
+              style={{ backgroundColor: currentCompany?.primaryColor || '#3b82f6' }}
+            >
               {currentCompany?.name?.charAt(0) || 'F'}
             </div>
           )}
