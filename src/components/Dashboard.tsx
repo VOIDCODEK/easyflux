@@ -14,8 +14,10 @@ import {
   Moon,
   Sun,
   Camera,
-  Paintbrush
+  Paintbrush,
+  Trash2
 } from 'lucide-react';
+
 import { useStore } from '@/lib/store';
 import { formatCurrency, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -50,6 +52,18 @@ export default function Dashboard() {
   
   const currentCompany = companies.find(c => c.id === currentCompanyId);
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateCompany(currentCompanyId!, { logo: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   
   if (!user) return <Login />;
   
@@ -227,22 +241,40 @@ export default function Dashboard() {
                           <Camera className="text-slate-400" size={32} />
                         )}
                       </div>
-                      <Button size="icon" variant="secondary" className="absolute -bottom-2 -right-2 rounded-full h-8 w-8 shadow-md">
-                        <Plus size={16} />
-                      </Button>
+                      <label className="absolute -bottom-2 -right-2 rounded-full h-8 w-8 shadow-md bg-white dark:bg-slate-800 flex items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-600">
+                        <Plus size={16} className="text-blue-600" />
+                        <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} />
+                      </label>
                     </div>
                     <div className="flex-1 space-y-4">
                       <div className="space-y-2">
-                        <Label>URL da Logo</Label>
-                        <Input 
-                          placeholder="https://sua-logo.com/imagem.png" 
-                          value={currentCompany?.logo || ''} 
-                          onChange={e => updateCompany(currentCompanyId!, { logo: e.target.value })}
-                        />
+                        <Label>Logo da Empresa</Label>
+                        <p className="text-xs text-slate-500 mb-2">Envie um arquivo de imagem (PNG, JPG) para usar como logo.</p>
+                        <Button variant="outline" size="sm" className="w-full relative">
+                          <input 
+                            type="file" 
+                            className="absolute inset-0 opacity-0 cursor-pointer" 
+                            accept="image/*" 
+                            onChange={handleLogoUpload} 
+                          />
+                          Selecionar Arquivo
+                        </Button>
+                        {currentCompany?.logo && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="w-full mt-2 text-rose-500 hover:text-rose-600 hover:bg-rose-50"
+                            onClick={() => updateCompany(currentCompanyId!, { logo: undefined })}
+                          >
+                            <Trash2 size={14} className="mr-2" /> Remover Logo
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
+
                   <div className="space-y-2">
+
                     <Label>Nome da Empresa</Label>
                     <Input 
                       value={currentCompany?.name || ''} 
