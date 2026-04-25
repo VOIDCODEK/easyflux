@@ -291,6 +291,9 @@ export default function Dashboard() {
                 <button onClick={() => setActiveTab('products')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
                   <Package size={16} className="text-blue-500" /> Novo Produto
                 </button>
+                <button onClick={() => setActiveTab('categories')} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 dark:text-white border-t dark:border-slate-800">
+                  <Tag size={16} className="text-violet-500" /> Nova Categoria
+                </button>
               </div>
             </div>
           </div>
