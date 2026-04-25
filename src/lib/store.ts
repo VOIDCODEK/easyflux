@@ -54,6 +54,8 @@ interface AppState {
   updateProduct: (id: string, updated: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
   setTheme: (theme: 'light' | 'dark') => void;
+  addCategory: (category: string) => void;
+  deleteCategory: (category: string) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -153,6 +155,16 @@ export const useStore = create<AppState>()(
       deleteProduct: (id: string) =>
         set((state) => ({
           products: state.products.filter((p) => p.id !== id),
+        })),
+      addCategory: (category: string) =>
+        set((state) => ({
+          categories: state.categories.includes(category) 
+            ? state.categories 
+            : [...state.categories, category],
+        })),
+      deleteCategory: (category: string) =>
+        set((state) => ({
+          categories: state.categories.filter((c) => c !== category),
         })),
     }),
     {
