@@ -18,6 +18,12 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
   const categories = useStore(state => state.categories);
   const [category, setCategory] = useState(categories[0] || 'Geral');
 
+  // Update date input when period changes
+  useEffect(() => {
+    const newDefaultDate = new Date(selectedYear, selectedMonth, 1).toISOString().split('T')[0];
+    setDate(newDefaultDate);
+  }, [selectedMonth, selectedYear]);
+
   const filtered = transactions.filter(t => {
     const d = new Date(t.date);
     return t.type === type && 
