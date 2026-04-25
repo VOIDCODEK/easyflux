@@ -46,7 +46,6 @@ import Login from './Login';
 import ProductsView from './ProductsView';
 import CategoriesView from './CategoriesView';
 import MovementsView from './MovementsView';
-import MovementsView from './MovementsView';
 
 export default function Dashboard() {
   const { 
