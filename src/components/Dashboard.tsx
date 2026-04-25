@@ -173,11 +173,11 @@ export default function Dashboard() {
         </div>
         
         <nav className="flex-1 px-4 py-4 space-y-1">
-          <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
-          <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => setActiveTab('products')} />
-          <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => setActiveTab('income')} />
-          <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => setActiveTab('expenses')} />
-          <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+          <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<Package size={20} />} label="Produtos" active={activeTab === 'products'} onClick={() => setActiveTab('products')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<ArrowUpCircle size={20} />} label="Entradas" active={activeTab === 'income'} onClick={() => setActiveTab('income')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<ArrowDownCircle size={20} />} label="Saídas" active={activeTab === 'expenses'} onClick={() => setActiveTab('expenses')} primaryColor={currentCompany?.primaryColor} />
+          <NavItem icon={<Settings size={20} />} label="Configurações" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} primaryColor={currentCompany?.primaryColor} />
         </nav>
 
         <div className="p-4 border-t dark:border-slate-800">
