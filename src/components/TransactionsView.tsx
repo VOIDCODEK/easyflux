@@ -54,7 +54,7 @@ export default function TransactionsView({ type }: { type: 'income' | 'expense' 
           </div>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Valor (R$)</label>
-            <Input type="number" placeholder="0,00" value={val} onChange={e => setVal(e.target.value)} />
+            <Input type="number" placeholder="0,00" value={val} onChange={e => setVal(e.target.value)} disabled={isClosed} />
           </div>
           <div className="space-y-2">
             <label className="text-xs font-medium text-slate-500">Data</label>
