@@ -116,7 +116,7 @@ export default function Dashboard() {
             <img src={currentCompany.logo} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
           ) : (
             <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200 dark:shadow-none">
-              {currentCompany?.name.charAt(0) || 'F'}
+              {currentCompany?.name?.charAt(0) || 'F'}
             </div>
           )}
           <div className="overflow-hidden">
