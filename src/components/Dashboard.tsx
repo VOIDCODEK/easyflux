@@ -50,8 +50,17 @@ export default function Dashboard() {
     updateCompany 
   } = useStore();
   
-  const currentCompany = companies.find(c => c.id === currentCompanyId) || companies[0];
+  const currentCompany = useMemo(() => {
+    return companies.find(c => c.id === currentCompanyId) || companies[0] || {
+      id: 'fallback',
+      name: 'Empresa',
+      primaryColor: '#3b82f6',
+      businessType: 'Serviços'
+    };
+  }, [companies, currentCompanyId]);
+
   const [activeTab, setActiveTab] = useState('dashboard');
+
 
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
