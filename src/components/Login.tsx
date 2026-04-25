@@ -180,7 +180,7 @@ export default function Login() {
         </Card>
         
         <p className="mt-8 text-center text-slate-400 text-xs font-medium uppercase tracking-widest">
-          &copy; 2024 EasyFlux • Gestão Financeira Inteligente
+          &copy; 2026 EasyFlux • Gestão Financeira Inteligente
         </p>
       </motion.div>
     </div>
