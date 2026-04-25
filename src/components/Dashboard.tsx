@@ -263,7 +263,8 @@ export default function Dashboard() {
               {activeTab === 'dashboard' ? 'Painel de Controle' : 
                activeTab === 'income' ? 'Gestão de Entradas' :
                activeTab === 'expenses' ? 'Gestão de Saídas' :
-               activeTab === 'products' ? 'Catálogo de Produtos' : 'Configurações do Sistema'}
+               activeTab === 'products' ? 'Catálogo de Produtos' : 
+               activeTab === 'categories' ? 'Gestão de Categorias' : 'Configurações do Sistema'}
             </h2>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
