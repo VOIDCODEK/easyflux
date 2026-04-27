@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useStore } from '@/lib/store';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Building2, Lock, Mail, User, ArrowRight } from 'lucide-react';
+import { Building2, Lock, Mail, User, ArrowRight, Loader2 } from 'lucide-react';
 import { AnimatedBackground } from './AnimatedBackground';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 
 export default function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -14,37 +16,51 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [loading, setLoading] = useState(false);
   const login = useStore(state => state.login);
-  const addCompany = useStore(state => state.addCompany);
-  const setCurrentCompany = useStore(state => state.setCurrentCompany);
-  const companies = useStore(state => state.companies);
 
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Mock authentication
-    const mockUser = {
-      id: Math.random().toString(36).substring(7),
-      email,
-      name: isRegistering ? name : email.split('@')[0],
-    };
+    setLoading(true);
 
-    if (isRegistering) {
-      const newId = Math.random().toString(36).substring(7);
-      addCompany({
-        id: newId,
-        name: companyName,
-        primaryColor: '#3b82f6',
-        businessType: 'Serviços',
-      });
-      setCurrentCompany(newId);
-    } else if (companies.length > 0) {
-      setCurrentCompany(companies[0].id);
+    try {
+      if (isRegistering) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              full_name: name,
+              company_name: companyName,
+            },
+          },
+        });
+        if (error) throw error;
+
+        if (data.user && !data.session) {
+          toast.success('Conta criada! Verifique seu email para confirmar o cadastro.');
+        } else if (data.session && data.user) {
+          login({ id: data.user.id, email: data.user.email ?? email, name });
+          toast.success('Conta criada com sucesso!');
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        if (data.user) {
+          login({
+            id: data.user.id,
+            email: data.user.email ?? email,
+            name: (data.user.user_metadata as any)?.full_name ?? email.split('@')[0],
+          });
+          toast.success('Bem-vindo de volta!');
+        }
+      }
+    } catch (err: any) {
+      toast.error(err?.message ?? 'Erro de autenticação');
+    } finally {
+      setLoading(false);
     }
-
-    login(mockUser);
-
   };
 
   return (
@@ -160,9 +176,16 @@ export default function Login() {
               <Button 
                 className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-base font-bold shadow-lg shadow-blue-500/20 group transition-all" 
                 type="submit"
+                disabled={loading}
               >
-                {isRegistering ? 'Criar conta agora' : 'Entrar no sistema'}
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    {isRegistering ? 'Criar conta agora' : 'Entrar no sistema'}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
               </Button>
               
               <div className="text-center text-sm text-slate-500">
