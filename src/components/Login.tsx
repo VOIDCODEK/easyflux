@@ -176,9 +176,16 @@ export default function Login() {
               <Button 
                 className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-base font-bold shadow-lg shadow-blue-500/20 group transition-all" 
                 type="submit"
+                disabled={loading}
               >
-                {isRegistering ? 'Criar conta agora' : 'Entrar no sistema'}
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    {isRegistering ? 'Criar conta agora' : 'Entrar no sistema'}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
               </Button>
               
               <div className="text-center text-sm text-slate-500">
