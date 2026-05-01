@@ -33,3 +33,9 @@ dist-ssr
 .env
 .env.*
 !.env.example
+.dev.vars
+!.dev.vars.example
+!service-role-key.txt
+!publishable-key.txt
+!SUPABASE_SERVICE_ROLE_KEY
+
