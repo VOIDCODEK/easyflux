@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Building2, Lock, Mail, User, ArrowRight, Loader2, MailCheck, KeyRound, ArrowLeft } from 'lucide-react';
+import { Building2, Lock, Mail, User, ArrowRight, Loader2, MailCheck, KeyRound, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { AnimatedBackground } from './AnimatedBackground';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -20,7 +20,10 @@ export default function Login() {
   const [companyName, setCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   const login = useStore(state => state.login);
+  const theme = useStore(state => state.theme);
+  const setTheme = useStore(state => state.setTheme);
 
   const isRegistering = view === 'register';
 
@@ -37,7 +40,6 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (isRegistering) {
         const { data, error } = await supabase.auth.signUp({
@@ -49,7 +51,6 @@ export default function Login() {
           },
         });
         if (error) throw error;
-
         if (data.user && !data.session) {
           setView('verify-sent');
           startCooldown();
@@ -114,25 +115,32 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div className={`min-h-screen flex items-center justify-center p-4 relative overflow-hidden ${theme === 'dark' ? 'dark bg-slate-950' : 'bg-slate-100'}`}>
       <AnimatedBackground />
-      
+
+      <button
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all"
+      >
+        {theme === 'dark' ? '☀️' : '🌙'}
+      </button>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md z-10"
       >
-        <Card className="shadow-2xl border-slate-200/50 backdrop-blur-sm bg-white/90">
+        <Card className="shadow-2xl border-slate-200/50 backdrop-blur-sm bg-white/90 dark:bg-slate-900/90 dark:border-slate-700">
           <CardHeader className="space-y-1 flex flex-col items-center pb-6">
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
               whileTap={{ scale: 0.95 }}
               className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white mb-4 shadow-xl shadow-blue-500/20"
             >
               {view === 'verify-sent' ? <MailCheck size={32} /> : view === 'forgot-password' ? <KeyRound size={32} /> : <Building2 size={32} />}
             </motion.div>
-            <CardTitle className="text-3xl font-extrabold tracking-tight text-slate-900">
+            <CardTitle className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               {view === 'verify-sent' ? 'Verifique seu email' : view === 'forgot-password' ? 'Recuperar senha' : 'EasyFlux'}
             </CardTitle>
             <CardDescription className="text-base font-medium text-slate-500 text-center">
@@ -143,6 +151,7 @@ export default function Login() {
             </CardDescription>
           </CardHeader>
 
+          {/* ── VERIFY SENT ── */}
           {view === 'verify-sent' ? (
             <>
               <CardContent className="space-y-4">
@@ -164,16 +173,14 @@ export default function Login() {
                     'Reenviar email de confirmação'
                   )}
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full text-slate-600"
-                  onClick={() => setView('login')}
-                >
+                <Button variant="ghost" className="w-full text-slate-600" onClick={() => setView('login')}>
                   <ArrowLeft className="mr-2 w-4 h-4" />
                   Voltar para o login
                 </Button>
               </CardFooter>
             </>
+
+          /* ── FORGOT PASSWORD ── */
           ) : view === 'forgot-password' ? (
             <form onSubmit={handleForgotPassword}>
               <CardContent className="space-y-4">
@@ -201,17 +208,14 @@ export default function Login() {
                 >
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Enviar link de recuperação'}
                 </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="w-full text-slate-600"
-                  onClick={() => setView('login')}
-                >
+                <Button type="button" variant="ghost" className="w-full text-slate-600" onClick={() => setView('login')}>
                   <ArrowLeft className="mr-2 w-4 h-4" />
                   Voltar para o login
                 </Button>
               </CardFooter>
             </form>
+
+          /* ── LOGIN / REGISTER ── */
           ) : (
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
@@ -227,11 +231,11 @@ export default function Login() {
                         <Label htmlFor="name">Nome completo</Label>
                         <div className="relative group">
                           <User className="absolute left-3 top-3 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
-                          <Input 
-                            id="name" 
-                            placeholder="Seu nome" 
-                            className="pl-10 h-11 border-slate-200 focus:border-blue-500 transition-all" 
-                            required 
+                          <Input
+                            id="name"
+                            placeholder="Seu nome"
+                            className="pl-10 h-11 border-slate-200 focus:border-blue-500 transition-all"
+                            required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                           />
@@ -241,11 +245,11 @@ export default function Login() {
                         <Label htmlFor="company">Nome da Empresa</Label>
                         <div className="relative group">
                           <Building2 className="absolute left-3 top-3 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
-                          <Input 
-                            id="company" 
-                            placeholder="Ex: Sua Empresa Ltda" 
-                            className="pl-10 h-11 border-slate-200 focus:border-blue-500 transition-all" 
-                            required 
+                          <Input
+                            id="company"
+                            placeholder="Ex: Sua Empresa Ltda"
+                            className="pl-10 h-11 border-slate-200 focus:border-blue-500 transition-all"
+                            required
                             value={companyName}
                             onChange={(e) => setCompanyName(e.target.value)}
                           />
@@ -255,22 +259,24 @@ export default function Login() {
                   )}
                 </AnimatePresence>
 
+                {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email corporativo</Label>
                   <div className="relative group">
                     <Mail className="absolute left-3 top-3 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      placeholder="voce@empresa.com" 
-                      className="pl-10 h-11 border-slate-200 focus:border-blue-500 transition-all" 
-                      required 
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="voce@empresa.com"
+                      className="pl-10 h-11 border-slate-200 focus:border-blue-500 transition-all"
+                      required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                 </div>
-                
+
+                {/* Senha com olhinho */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password">Senha</Label>
@@ -286,22 +292,30 @@ export default function Login() {
                   </div>
                   <div className="relative group">
                     <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
-                    <Input 
-                      id="password" 
-                      type="password" 
-                      placeholder="••••••••" 
-                      className="pl-10 h-11 border-slate-200 focus:border-blue-500 transition-all" 
-                      required 
+                    <Input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      className="pl-10 pr-10 h-11 border-slate-200 focus:border-blue-500 transition-all"
+                      required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(v => !v)}
+                      className="absolute right-3 top-3 text-slate-400 hover:text-blue-500 transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
                   </div>
                 </div>
               </CardContent>
-              
+
               <CardFooter className="flex flex-col space-y-4 pt-2 pb-8">
-                <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-base font-bold shadow-lg shadow-blue-500/20 group transition-all" 
+                <Button
+                  className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-base font-bold shadow-lg shadow-blue-500/20 group transition-all"
                   type="submit"
                   disabled={loading}
                 >
@@ -314,10 +328,10 @@ export default function Login() {
                     </>
                   )}
                 </Button>
-                
+
                 <div className="text-center text-sm text-slate-500">
                   {isRegistering ? 'Já possui uma conta corporativa?' : 'Ainda não utiliza o EasyFlux?'}
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setView(isRegistering ? 'login' : 'register')}
                     className="ml-2 text-blue-600 font-bold hover:text-blue-700 transition-colors"
@@ -329,7 +343,7 @@ export default function Login() {
             </form>
           )}
         </Card>
-        
+
         <p className="mt-8 text-center text-slate-400 text-xs font-medium uppercase tracking-widest">
           &copy; 2026 EasyFlux • Gestão Financeira Inteligente
         </p>

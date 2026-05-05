@@ -38,4 +38,5 @@ dist-ssr
 !service-role-key.txt
 !publishable-key.txt
 !SUPABASE_SERVICE_ROLE_KEY
-
+.supabase
+!supabase

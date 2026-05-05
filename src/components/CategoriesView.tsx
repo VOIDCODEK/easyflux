@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tag, Trash2, Plus, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { addCategory as addCategoryDB, deleteCategory as deleteCategoryDB } from '@/lib/db';
 
 export default function CategoriesView() {
   const { categories, addCategory, deleteCategory, currentCompanyId, companies } = useStore();
@@ -12,18 +13,17 @@ export default function CategoriesView() {
   const [newCategory, setNewCategory] = useState('');
   const [error, setError] = useState('');
 
-  const handleAdd = () => {
-    if (!newCategory.trim()) return;
-    
-    if (categories.includes(newCategory.trim())) {
-      setError('Esta categoria já existe.');
-      return;
-    }
-
-    addCategory(newCategory.trim());
-    setNewCategory('');
-    setError('');
-  };
+  const handleAdd = async () => {
+  if (!newCategory.trim()) return;
+  if (categories.includes(newCategory.trim())) {
+    setError('Esta categoria já existe.');
+    return;
+  }
+  const saved = await addCategoryDB(currentCompanyId!, newCategory.trim());
+  if (saved) addCategory(newCategory.trim());
+  setNewCategory('');
+  setError('');
+};
 
   return (
     <div className="space-y-6">

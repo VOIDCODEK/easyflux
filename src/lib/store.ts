@@ -7,6 +7,13 @@ export interface User {
   name: string;
 }
 
+export interface Subscription {
+  id: string;
+  status: string | null;
+  plan: string | null;
+  expires_at: string | null;
+}
+
 export interface Company {
   id: string;
   name: string;
@@ -14,7 +21,7 @@ export interface Company {
   primaryColor: string;
   businessType: string;
   monthlyRevenueGoal?: number;
-  closedMonths?: string[]; // Format: "MM-YYYY"
+  closedMonths?: string[];
 }
 
 export interface Product {
@@ -48,6 +55,7 @@ export interface RecurringTransaction {
 
 interface AppState {
   user: User | null;
+  subscription: Subscription | null;
   companies: Company[];
   currentCompanyId: string | null;
   transactions: Transaction[];
@@ -59,6 +67,7 @@ interface AppState {
   selectedYear: number;
   login: (user: User) => void;
   logout: () => void;
+  setSubscription: (sub: Subscription | null) => void;
   addCompany: (company: Company) => void;
   updateCompany: (id: string, updated: Partial<Company>) => void;
   setCurrentCompany: (id: string) => void;
@@ -84,6 +93,7 @@ export const useStore = create<AppState>()(
   persist(
     (set, get) => ({
       user: null,
+      subscription: null,
       theme: 'light',
       selectedMonth: new Date().getMonth(),
       selectedYear: new Date().getFullYear(),
@@ -124,35 +134,33 @@ export const useStore = create<AppState>()(
           description: 'Internet e Luz',
           category: 'Manutenção',
           date: new Date().toISOString(),
-        }
+        },
       ],
       recurringTransactions: [],
       products: [],
       categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
       login: (user) => set({ user }),
-      logout: () => set({ user: null }),
+      logout: () => set({ user: null, subscription: null }),
+      setSubscription: (subscription) => set({ subscription }),
       setSelectedPeriod: (month, year) => set({ selectedMonth: month, selectedYear: year }),
-      toggleMonthStatus: (month, year) => set((state) => {
-        const companyId = state.currentCompanyId;
-        if (!companyId) return state;
-        
-        const periodKey = `${month}-${year}`;
-        const company = state.companies.find(c => c.id === companyId);
-        if (!company) return state;
-        
-        const closedMonths = company.closedMonths || [];
-        const isClosed = closedMonths.includes(periodKey);
-        
-        const newClosedMonths = isClosed 
-          ? closedMonths.filter(m => m !== periodKey)
-          : [...closedMonths, periodKey];
-          
-        return {
-          companies: state.companies.map(c => 
-            c.id === companyId ? { ...c, closedMonths: newClosedMonths } : c
-          )
-        };
-      }),
+      toggleMonthStatus: (month, year) =>
+        set((state) => {
+          const companyId = state.currentCompanyId;
+          if (!companyId) return state;
+          const periodKey = `${month}-${year}`;
+          const company = state.companies.find((c) => c.id === companyId);
+          if (!company) return state;
+          const closedMonths = company.closedMonths || [];
+          const isClosed = closedMonths.includes(periodKey);
+          const newClosedMonths = isClosed
+            ? closedMonths.filter((m) => m !== periodKey)
+            : [...closedMonths, periodKey];
+          return {
+            companies: state.companies.map((c) =>
+              c.id === companyId ? { ...c, closedMonths: newClosedMonths } : c
+            ),
+          };
+        }),
       setTheme: (theme) => {
         set({ theme });
         if (typeof document !== 'undefined') {
@@ -164,9 +172,9 @@ export const useStore = create<AppState>()(
         }
       },
       addCompany: (company: Company) =>
-        set((state) => ({ 
+        set((state) => ({
           companies: [...state.companies, company],
-          currentCompanyId: company.id // Auto switch to new company
+          currentCompanyId: company.id,
         })),
       updateCompany: (id: string, updated: Partial<Company>) =>
         set((state) => ({
@@ -186,7 +194,9 @@ export const useStore = create<AppState>()(
         })),
       updateTransaction: (id: string, updated: Partial<Transaction>) =>
         set((state) => ({
-          transactions: state.transactions.map((t) => (t.id === id ? { ...t, ...updated } : t)),
+          transactions: state.transactions.map((t) =>
+            t.id === id ? { ...t, ...updated } : t
+          ),
         })),
       addRecurringTransaction: (transaction: Omit<RecurringTransaction, 'id'>) =>
         set((state) => ({
@@ -201,29 +211,26 @@ export const useStore = create<AppState>()(
         })),
       updateRecurringTransaction: (id: string, updated: Partial<RecurringTransaction>) =>
         set((state) => ({
-          recurringTransactions: state.recurringTransactions.map((t) => (t.id === id ? { ...t, ...updated } : t)),
+          recurringTransactions: state.recurringTransactions.map((t) =>
+            t.id === id ? { ...t, ...updated } : t
+          ),
         })),
       processRecurringTransactions: () => {
         const state = get();
         const month = state.selectedMonth;
         const year = state.selectedYear;
-
         const newTransactions: Transaction[] = [];
-
-        state.recurringTransactions.forEach(rt => {
+        state.recurringTransactions.forEach((rt) => {
           if (!rt.active) return;
-
-          // Check if transaction for this recurring item already exists in selected month/year
-          const alreadyProcessed = state.transactions.some(t => 
-            t.description.includes(rt.description) && 
-            t.companyId === rt.companyId &&
-            new Date(t.date).getMonth() === month &&
-            new Date(t.date).getFullYear() === year
+          const alreadyProcessed = state.transactions.some(
+            (t) =>
+              t.description.includes(rt.description) &&
+              t.companyId === rt.companyId &&
+              new Date(t.date).getMonth() === month &&
+              new Date(t.date).getFullYear() === year
           );
-
           if (!alreadyProcessed) {
             const transDate = new Date(year, month, rt.dayOfMonth);
-            
             newTransactions.push({
               id: Math.random().toString(36).substring(7),
               companyId: rt.companyId,
@@ -231,11 +238,10 @@ export const useStore = create<AppState>()(
               value: rt.value,
               description: `[FIXO] ${rt.description}`,
               category: rt.category,
-              date: transDate.toISOString()
+              date: transDate.toISOString(),
             });
           }
         });
-
         if (newTransactions.length > 0) {
           set({ transactions: [...state.transactions, ...newTransactions] });
         }
@@ -257,32 +263,33 @@ export const useStore = create<AppState>()(
         })),
       addCategory: (category: string) =>
         set((state) => ({
-          categories: state.categories.includes(category) 
-            ? state.categories 
+          categories: state.categories.includes(category)
+            ? state.categories
             : [...state.categories, category],
         })),
       deleteCategory: (category: string) =>
         set((state) => ({
           categories: state.categories.filter((c) => c !== category),
         })),
-      resetAllData: () => set((state) => ({
-        transactions: [],
-        recurringTransactions: [],
-        products: [],
-        categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
-        companies: [
-          {
-            id: '1',
-            name: 'Minha Empresa Demo',
-            primaryColor: '#3b82f6',
-            businessType: 'Serviços',
-            monthlyRevenueGoal: 10000,
-          },
-        ],
-        currentCompanyId: '1',
-        selectedMonth: new Date().getMonth(),
-        selectedYear: new Date().getFullYear(),
-      })),
+      resetAllData: () =>
+        set(() => ({
+          transactions: [],
+          recurringTransactions: [],
+          products: [],
+          categories: ['Serviço', 'Produto', 'Aluguel', 'Salários', 'Manutenção', 'Marketing', 'Outros'],
+          companies: [
+            {
+              id: '1',
+              name: 'Minha Empresa Demo',
+              primaryColor: '#3b82f6',
+              businessType: 'Serviços',
+              monthlyRevenueGoal: 10000,
+            },
+          ],
+          currentCompanyId: '1',
+          selectedMonth: new Date().getMonth(),
+          selectedYear: new Date().getFullYear(),
+        })),
     }),
     {
       name: 'finance-saas-storage',
@@ -294,7 +301,7 @@ export const useStore = create<AppState>()(
             document.documentElement.classList.remove('dark');
           }
         }
-      }
+      },
     }
   )
 );
